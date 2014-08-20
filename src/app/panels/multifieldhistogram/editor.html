@@ -36,6 +36,10 @@
               <label class="small">Value Field <tip>This field must contain a numeric value</tip></label>
               <input ng-change="set_refresh(true)" placeholder="Start typing" bs-typeahead="fields.list" type="text" class="input-medium" ng-model="value.value_field">
             </div>
+            <div class="editor-option">
+              <label class="small">Item Text <tip>Displayed text for item</tip></label>
+              <input ng-change="set_refresh(true)" placeholder="item text" type="text" class="input-medium" ng-model="value.value_text">
+            </div>
           </td>
           <td>
             <div class="editor-option" ng-show="value.mode != 'count'">

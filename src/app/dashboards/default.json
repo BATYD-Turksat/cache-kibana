@@ -20,7 +20,8 @@
                 0
               ],
               "color": "#0A437C",
-              "alias": null
+              "alias": null,
+              "value_text": "Cache Hit"
             },
             {
               "mode": "mean",
@@ -32,7 +33,8 @@
                 0
               ],
               "color": null,
-              "alias": null
+              "alias": null,
+              "value_text": "Cache Miss"
             }
           ],
           "time_field": "@timestamp",
@@ -55,7 +57,7 @@
           },
           "auto_int": true,
           "resolution": 100,
-          "interval": "30s",
+          "interval": "10s",
           "intervals": [
             "auto",
             "1s",
@@ -125,8 +127,21 @@
       ]
     },
     "filter": {
-      "list": {},
-      "ids": []
+      "list": {
+        "0": {
+          "type": "time",
+          "field": "@timestamp",
+          "from": "now-15m",
+          "to": "now",
+          "mandate": "must",
+          "active": true,
+          "alias": "",
+          "id": 0
+        }
+      },
+      "ids": [
+        0
+      ]
     }
   },
   "title": "Turksat Cache",
@@ -154,7 +169,7 @@
     {
       "type": "filtering",
       "collapse": true,
-      "notice": false,
+      "notice": true,
       "enable": true
     }
   ],
