@@ -75,9 +75,9 @@ function (angular, app, $, _, kbn, moment, timeSeries, numeral) {
        */
       value_field   : null,
       /** @scratch /panels/multifieldhistogram/3
-       * value_field:: y-axis field text if +mode+ is set to mean, max, min or total. Must be string.
+       * value_text:: y-axis custom field text if +mode+ is set to mean, max, min or total. Must be string.
        */
-      value_text  : "item text",
+      value_text  : '',
       /** @scratch /panels/multifieldhistogram/3
        * scale:: Scale the y-axis by this factor
        */
@@ -285,7 +285,24 @@ function (angular, app, $, _, kbn, moment, timeSeries, numeral) {
     };
 
     $scope.get_alias = function (value, query) {
-      return value.value_text;
+      var alias = '';
+      var isCount = value.mode === 'count';
+      if (value.alias) {
+        alias += value.alias;
+      } else {
+        if (query.alias) {
+          alias += query.alias;
+        } else {
+          if (isCount) {
+            alias += $scope.panel.show_query ? query.query||'*' : '';
+          } else {
+            alias += $scope.panel.show_query ? '('+(query.query||'*')+')' : '';
+          }
+        }
+        alias += !isCount && value.value_field ? (alias && '.')+value.value_field : '';
+        alias = alias ? value.mode + '(' + alias + ')' : value.mode;
+      }
+      return alias;
     };
 
     $scope.get_interval = function () {
@@ -477,7 +494,7 @@ function (angular, app, $, _, kbn, moment, timeSeries, numeral) {
 
               var info = {
                 color: panel_value.color || q.color,
-                alias: $scope.get_alias(panel_value, q),
+                alias: panel_value.value_text ? panel_value.value_text : $scope.get_alias(panel_value, q),
               };
               
               $scope.legend[serie_id] = {query:info,hits:hits};
