@@ -75,6 +75,10 @@ function (angular, app, $, _, kbn, moment, timeSeries, numeral) {
        */
       value_field   : null,
       /** @scratch /panels/multifieldhistogram/3
+       * value_text:: y-axis custom field text if +mode+ is set to mean, max, min or total. Must be string.
+       */
+      value_text  : '',
+      /** @scratch /panels/multifieldhistogram/3
        * scale:: Scale the y-axis by this factor
        */
       scale         : 1,
@@ -490,7 +494,7 @@ function (angular, app, $, _, kbn, moment, timeSeries, numeral) {
 
               var info = {
                 color: panel_value.color || q.color,
-                alias: $scope.get_alias(panel_value, q),
+                alias: panel_value.value_text ? panel_value.value_text : $scope.get_alias(panel_value, q),
               };
               
               $scope.legend[serie_id] = {query:info,hits:hits};
