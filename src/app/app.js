@@ -27,6 +27,10 @@ function (angular, $, _, appLevelRequire) {
     // features if we define them after boot time
     register_fns = {};
 
+  app.controller('SystemController', function($scope) {
+       console.log("hello world");
+  });
+
   // This stores the Kibana revision number, @REV@ is replaced by grunt.
   app.constant('kbnVersion',"@REV@");
 
@@ -81,8 +85,9 @@ function (angular, $, _, appLevelRequire) {
       .when('/dashboard/:kbnType/:kbnId/:params', {
         templateUrl: 'app/partials/dashboard.html'
       })
-      .otherwise({
-        redirectTo: 'dashboard'
+      .when('/hello', {
+          templateUrl: 'app/partials/hello.html',
+          controller: 'SystemController'
       });
 
     // this is how the internet told me to dynamically add modules :/

@@ -41,7 +41,8 @@ function (Settings) {
      *
      * default_route: '/dashboard/elasticsearch/WebLogs',
      */
-    default_route     : '/dashboard/file/default.json',
+    /*default_route     : '/dashboard/file/default.json', */
+    default_route     : '/hello',
 
     /** @scratch /configuration/config.js/5
      *
