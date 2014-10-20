@@ -38,6 +38,16 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
+var staticMiddleware = express.static(__dirname + '/../src');
+
+app.use("/kibana", function(req, res, next) {
+    if (req.isAuthenticated()) {
+        staticMiddleware(req, res, next);
+    } else {
+        res.redirect('/login');
+    }
+});
+
 // launch ======================================================================
 app.listen(port);
 console.log('The magic happens on port ' + port);
