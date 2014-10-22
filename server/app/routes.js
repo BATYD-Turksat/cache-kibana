@@ -5,7 +5,15 @@ module.exports = function(app, passport) {
 	// show the home page (will also have our login links)
 	app.get('/', function(req, res) {
         if (req.isAuthenticated()) {
-            res.redirect('/kibana');
+            var user = req.user;
+            user.hasRole('admin', function (err, isAdmin) {
+                console.log("Is user admin: " + isAdmin)
+                if (isAdmin){
+                    res.redirect('/kibana');
+                } else {
+                    res.render('index.ejs');
+                }
+            });
         } else {
             res.render('index.ejs');
         }

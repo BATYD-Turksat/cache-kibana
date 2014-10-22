@@ -98,6 +98,12 @@ module.exports = function(passport) {
 
                             return done(null, newUser);
                         });
+
+                        newUser.addRole(req.body.role, function (err) {
+                            if (err){
+                                console.log(err)
+                            }
+                        });
                     }
 
                 });
