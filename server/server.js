@@ -13,6 +13,7 @@ var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
+var swig         = require('swig');
 
 var configDB = require('./config/database.js');
 var rbac = require('./app/permissions'); //TODO: Temporary hack. This should be performed in system installation
@@ -28,7 +29,12 @@ app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser.json()); // get information from html forms
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.set('view engine', 'ejs'); // set up ejs for templating
+// set .swg as the default extension
+app.engine('html', swig.renderFile);
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
+
+
 
 // required for passport
 console.log("Cookie secret: " + process.env.CACHE_COOKIE);

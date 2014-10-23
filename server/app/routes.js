@@ -11,17 +11,17 @@ var User       = require('./models/user');
                 if (isAdmin){
                     res.redirect('/kibana');
                 } else {
-                    res.render('index.ejs');
+                    res.render('index.html');
                 }
             });
         } else {
-            res.render('index.ejs');
+            res.render('index.html');
         }
 	});
 
 	// PROFILE SECTION =========================
 	app.get('/profile', isLoggedIn, function(req, res) {
-		res.render('profile.ejs', {
+		res.render('profile.html', {
 			user : req.user
 		});
 	});
@@ -40,7 +40,7 @@ var User       = require('./models/user');
 		// LOGIN ===============================
 		// show the login form
 		app.get('/login', function(req, res) {
-			res.render('login.ejs', { message: req.flash('loginMessage') });
+			res.render('login.html', { message: req.flash('loginMessage') });
 		});
 
 		// process the login form
@@ -58,7 +58,7 @@ var User       = require('./models/user');
                 user.hasRole('admin', function (err, isAdmin) {
                     console.log( "Is user admin:", isAdmin );
                     if (isAdmin){
-                        res.render('signup.ejs', { message: req.flash('signupMessage') });
+                        res.render('signup.html', { message: req.flash('signupMessage') });
                     } else {
                         res.redirect('/');
                     }
@@ -67,7 +67,7 @@ var User       = require('./models/user');
                 User.count({}, function( err, count){
                     console.log( "Number of users:", count );
                     if (count == 0) {
-                        res.render('signup.ejs', { message: req.flash('signupMessage') });
+                        res.render('signup.html', { message: req.flash('signupMessage') });
                     } else {
                         res.redirect('/');
                     }
@@ -83,20 +83,6 @@ var User       = require('./models/user');
 		}));
 
 // =============================================================================
-// AUTHORIZE (ALREADY LOGGED IN / CONNECTING OTHER SOCIAL ACCOUNT) =============
-// =============================================================================
-
-	// locally --------------------------------
-		app.get('/connect/local', function(req, res) {
-			res.render('connect-local.ejs', { message: req.flash('loginMessage') });
-		});
-		app.post('/connect/local', passport.authenticate('local-signup', {
-			successRedirect : '/profile', // redirect to the secure profile section
-			failureRedirect : '/connect/local', // redirect back to the signup page if there is an error
-			failureFlash : true // allow flash messages
-		}));
-
-// =============================================================================
 // UNLINK ACCOUNTS =============================================================
 // =============================================================================
 // used to unlink accounts. for social accounts, just remove the token
@@ -106,7 +92,7 @@ var User       = require('./models/user');
 	// local -----------------------------------
 	app.get('/unlink/local', isLoggedIn, function(req, res) {
 		var user            = req.user;
-		user.local.user    = undefined;
+		user.local.em    = undefined;
 		user.local.password = undefined;
 		user.save(function(err) {
 			res.redirect('/profile');
@@ -126,7 +112,7 @@ var User       = require('./models/user');
                 if (isOperator){
                     res.redirect('/');
                 } else {
-                    res.render('controls.ejs');
+                    res.render('controls.html');
                 }
             });
         } else {
