@@ -1,4 +1,5 @@
 module.exports = function(app, passport) {
+var User       = require('./models/user');
 
 // normal routes ===============================================================
 
@@ -7,7 +8,6 @@ module.exports = function(app, passport) {
         if (req.isAuthenticated()) {
             var user = req.user;
             user.hasRole('admin', function (err, isAdmin) {
-                console.log("Is user admin: " + isAdmin)
                 if (isAdmin){
                     res.redirect('/kibana');
                 } else {
@@ -53,8 +53,27 @@ module.exports = function(app, passport) {
 		// SIGNUP =================================
 		// show the signup form
 		app.get('/signup', function(req, res) {
-			res.render('signup.ejs', { message: req.flash('signupMessage') });
-		});
+            if (req.isAuthenticated()) {
+                var user = req.user;
+                user.hasRole('admin', function (err, isAdmin) {
+                    console.log( "Is user admin:", isAdmin );
+                    if (isAdmin){
+                        res.render('signup.ejs', { message: req.flash('signupMessage') });
+                    } else {
+                        res.redirect('/');
+                    }
+                });
+            } else {
+                User.count({}, function( err, count){
+                    console.log( "Number of users:", count );
+                    if (count == 0) {
+                        res.render('signup.ejs', { message: req.flash('signupMessage') });
+                    } else {
+                        res.redirect('/');
+                    }
+                })
+            }
+        });
 
 		// process the signup form
 		app.post('/signup', passport.authenticate('local-signup', {
@@ -87,12 +106,33 @@ module.exports = function(app, passport) {
 	// local -----------------------------------
 	app.get('/unlink/local', isLoggedIn, function(req, res) {
 		var user            = req.user;
-		user.local.email    = undefined;
+		user.local.user    = undefined;
 		user.local.password = undefined;
 		user.save(function(err) {
 			res.redirect('/profile');
 		});
 	});
+
+// =============================================================================
+// CACHE SERVER CONTROLS PAGE
+// Only users with admin or developer privileges can see controls
+// =============================================================================
+    app.get('/controls', function(req, res) {
+        if (req.isAuthenticated()) {
+            var user = req.user;
+            user.hasRole('operator', function (err, isOperator) {
+                console.log( "Is user operator:", isOperator );
+
+                if (isOperator){
+                    res.redirect('/');
+                } else {
+                    res.render('controls.ejs');
+                }
+            });
+        } else {
+            res.redirect('/');
+        }
+    });
 };
 
 // route middleware to ensure user is logged in
