@@ -1,22 +1,11 @@
-<!doctype html>
-<html>
-<head>
-	<title>Node Authentication</title>
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-	<style>
-		body 		{ padding-top:80px; }
-	</style>
-</head>
-<body>
-<div class="container">
+{% extends 'headless.html' %}
 
+{% block app-content %}
+<div class="container">
 	<div class="jumbotron text-center">
 		<h1><span class="fa fa-lock"></span> Türksat Cache</h1>
 
 		<a href="/login" class="btn btn-default btn-lg"><span class="fa fa-user"></span> Login</a>
 	</div>
-
 </div>
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+
+{% block app-header %}
+<div ng-cloak class="nav nav-pills">
+    <li><a href="/controls">Controls</a></li>
+    <li><a href="/kibana/#/dashboard/file/logstash.json">System Logs 1</a></li>
+    <li><a href="/kibana/#/dashboard/script/logstash.js">System Logs 2</a></li>
+    <li class="nav pull-right"><a href="/logout">Log Out</a></li>
+</div>
+{% endblock %}
