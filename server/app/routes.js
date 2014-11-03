@@ -119,6 +119,28 @@ var User       = require('./models/user');
             res.redirect('/');
         }
     });
+
+// =============================================================================
+// ADMIN CONTROL PAGE
+// Only admin privileges can see controls
+// =============================================================================
+    app.get('/admin', function(req, res) {
+        if (req.isAuthenticated()) {
+            var user = req.user;
+            user.hasRole('admin', function (err, isAdmin) {
+                console.log( "Is user admin:", isAdmin );
+
+                if (isAdmin){
+                    res.render('admin.html');
+                } else {
+                    res.redirect('/');
+                }
+            });
+        } else {
+            res.redirect('/');
+        }
+    });
+
 };
 
 // route middleware to ensure user is logged in

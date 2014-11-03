@@ -1,7 +1,12 @@
 {% extends 'layout.html' %}
 
+{% block app-css %}
+    <link rel="stylesheet" href="kibana/css/bootstrap.dark.min.css">
+{% endblock %}
+
+
 {% block app-header %}
-<div ng-cloak class="nav nav-pills">
+<div class="nav nav-pills">
     <li><a href="/controls">Controls</a></li>
     <li><a href="/kibana/#/dashboard/file/logstash.json">System Logs 1</a></li>
     <li><a href="/kibana/#/dashboard/script/logstash.js">System Logs 2</a></li>

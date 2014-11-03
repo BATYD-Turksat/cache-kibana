@@ -16,9 +16,9 @@
 				<h3><span class="fa fa-user"></span> Local</h3>
 
 				<p>
-					<strong>id</strong>: <%= user._id %><br>
-					<strong>user</strong>: <%= user.local.email %><br>
-					<strong>password</strong>: <%= user.local.password %>
+					<strong>id</strong>: {{ String(user['_id']) | escape }}<br>
+					<strong>user</strong>: {{ user.local.email }}<br>
+					<strong>password</strong>: {{ user.local.password }}
 				</p>
 					
 				<a href="/unlink/local" class="btn btn-default">Unlink</a>

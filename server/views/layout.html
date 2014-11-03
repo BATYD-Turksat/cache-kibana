@@ -15,9 +15,8 @@
     <!-- Fav Icon -->
 
     <!--Application CSS Files-->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     {% block app-css %}{% endblock %}
+    <link rel="stylesheet" href="kibana/css/font-awesome.min.css">
 
     <!-- HTML5 Shim -->
     <!--[if lt IE 9]>
@@ -27,13 +26,13 @@
 
 <body>
 <section class="header">
-    <section class="container">
+    <section class="container-fluid">
         {% block app-header %}{% endblock %}
     </section>
 </section>
 
 <section class="content">
-    <section class="container">
+    <section class="container-fluid">
         {% block app-content %}{% endblock %}
     </section>
 </section>
