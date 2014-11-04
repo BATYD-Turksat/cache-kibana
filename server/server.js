@@ -4,7 +4,7 @@
 // get all the tools we need
 var express  = require('express');
 var app      = express();
-var port     = process.env.PORT || 8080;
+var port     = process.env.PORT || 8081;
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash    = require('connect-flash');
@@ -34,7 +34,9 @@ app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
 
-
+// TODO: Need to check if it has any side-effect
+app.set('trust proxy', 'localhost');
+app.enable('trust proxy');
 
 // required for passport
 console.log("Cookie secret: " + process.env.CACHE_COOKIE);
