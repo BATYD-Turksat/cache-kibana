@@ -13,6 +13,7 @@
     <meta name="description" content="Türksat transparent proxy cache system.">
 
     <!-- Fav Icon -->
+    <link rel="icon" type="image/png" href="img/small.png">
 
     <!--Application CSS Files-->
     {% block app-css %}{% endblock %}
@@ -25,17 +26,10 @@
 </head>
 
 <body>
-<section class="header">
-    <section class="container-fluid">
-        {% block app-header %}{% endblock %}
-    </section>
-</section>
 
-<section class="content">
-    <section class="container-fluid">
-        {% block app-content %}{% endblock %}
-    </section>
-</section>
+{% block app-header %}{% endblock %}
+{% block app-content %}{% endblock %}
+
 </body>
 
 </html>

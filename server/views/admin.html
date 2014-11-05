@@ -1,4 +1,39 @@
 {% extends 'header.html' %}
 {% block app-content %}
-    <p> Hello Admin page!</p>
+
+{% if app_users and app_users.length > 0 %}
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>User ID</th>
+        <th>User Name</th>
+        <th>Role</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in app_users %}
+    <tr>
+        <th>
+            {{ String(user['_id']) | escape }}
+        </th>
+        <th>
+            {{ user.local.email }}
+        </th>
+
+        {% for role in roles %}
+            {% if role['_id'] === String(user.roles[0]) %}
+                <th>
+                    {{role.name}}
+                </th>
+            {% endif %}
+        {% endfor %}
+        <th>
+            <a href="/delete/user/{{ String(user['_id']) | escape }}" class="btn btn-default">Delete</a>
+        </th>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endif %}
 {% endblock %}

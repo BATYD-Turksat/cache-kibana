@@ -1,15 +1,28 @@
 {% extends 'layout.html' %}
 
 {% block app-css %}
-    <link rel="stylesheet" href="http://localhost:8080/css/bootstrap.dark.min.css" type="text/css">
+    <link rel="stylesheet" href="css/bootstrap.dark.min.css" type="text/css">
 {% endblock %}
 
-
 {% block app-header %}
-<div class="nav nav-pills">
-    <li><a href="/controls">Controls</a></li>
-    <li><a href="/kibana/#/dashboard/file/logstash.json">System Logs 1</a></li>
-    <li><a href="/kibana/#/dashboard/script/logstash.js">System Logs 2</a></li>
-    <li class="nav pull-right"><a href="/logout">Log Out</a></li>
-</div>
+<section class="header">
+    <section class="container-fluid">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <span class="brand"><img src="img/small.png"></span>
+                    <ul class="nav pull-right">
+                        <div class="nav nav-pills">
+                            <li><a href="/admin">Admin</a></li>
+                            <li><a href="/controls">Controls</a></li>
+                            <li><a href="/kibana/#/dashboard/file/logstash.json">System Logs 1</a></li>
+                            <li><a href="/kibana/#/dashboard/script/logstash.js">System Logs 2</a></li>
+                            <li><a href="/logout">Log Out</a></li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
 {% endblock %}

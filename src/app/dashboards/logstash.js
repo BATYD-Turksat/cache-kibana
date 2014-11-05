@@ -38,7 +38,7 @@ dashboard = {
 };
 
 // Set a title
-dashboard.title = 'Turksat Cache';
+dashboard.title = '';
 
 // Allow the user to set the index, if they dont, fall back to logstash.
 if(!_.isUndefined(ARGS.index)) {

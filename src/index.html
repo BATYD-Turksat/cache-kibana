@@ -17,9 +17,6 @@
     <script src="vendor/require/require.js"></script>
     <script src="app/components/require.config.js"></script>
     <script>require(['app'], function () {})</script>
-    <style>
-    </style>
-
   </head>
 
   <body>
@@ -32,13 +29,9 @@
     <link rel="stylesheet" ng-href="css/bootstrap.{{dashboard.current.style||'dark'}}.min.css">
     <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
+    <style>
+    </style>
 
-    <div ng-cloak class="nav nav-pills">
-        <li><a href="/controls">Controls</a></li>
-        <li><a href="#/dashboard/file/logstash.json">System Logs 1</a></li>
-        <li><a href="#/dashboard/script/logstash.js">System Logs 2</a></li>
-        <li class="nav pull-right"><a href="/logout">Log Out</a></li>
-    </div>
 
     <div ng-cloak ng-repeat='alert in dashAlerts.list' class="alert-{{alert.severity}} dashboard-notice" ng-show="$last">
       <button type="button" class="close" ng-click="dashAlerts.clear(alert)" style="padding-right:50px">&times;</button>
@@ -47,13 +40,22 @@
     <div ng-cloak class="navbar navbar-static-top">
       <div class="navbar-inner">
         <div class="container-fluid">
-          <span class="brand"><img src="img/small.png" bs-tooltip="'Kibana '+(kbnVersion=='@REV@'?'master':kbnVersion)" data-placement="bottom"> {{dashboard.current.title}}</span>
-
-          <ul class="nav pull-right" ng-controller='dashLoader' ng-init="init()" ng-include="'app/partials/dashLoader.html'">
+          <span class="brand"><img src="img/small.png"> </span>
+          <ul class="nav pull-left" ng-controller='dashLoader' ng-init="init()" ng-include="'app/partials/dashLoader.html'">
+          </ul>
+          <ul class="nav pull-right">
+            <div class="nav nav-pills">
+                <li><a href="/admin">Admin</a></li>
+                <li><a href="/controls">Controls</a></li>
+                <li><a href="#/dashboard/file/logstash.json">System Logs 1</a></li>
+                <li><a href="#/dashboard/script/logstash.js">System Logs 2</a></li>
+                <li><a href="/logout">Log Out</a></li>
+            </div>
           </ul>
         </div>
       </div>
     </div>
+
 
     <div ng-cloak ng-view></div>
 

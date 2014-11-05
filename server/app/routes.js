@@ -15,15 +15,8 @@ var User       = require('./models/user');
                 }
             });
         } else {
-            res.render('index.html');
+            res.redirect('/login');
         }
-	});
-
-	// PROFILE SECTION =========================
-	app.get('/profile', isLoggedIn, function(req, res) {
-		res.render('profile.html', {
-			user : req.user
-		});
 	});
 
 	// LOGOUT ==============================
@@ -77,27 +70,10 @@ var User       = require('./models/user');
 
 		// process the signup form
 		app.post('/signup', passport.authenticate('local-signup', {
-			successRedirect : '/profile', // redirect to the secure profile section
+			successRedirect : '/admin', // redirect to the secure admin section
 			failureRedirect : '/signup', // redirect back to the signup page if there is an error
 			failureFlash : true // allow flash messages
 		}));
-
-// =============================================================================
-// UNLINK ACCOUNTS =============================================================
-// =============================================================================
-// used to unlink accounts. for social accounts, just remove the token
-// for local account, remove email and password
-// user account will stay active in case they want to reconnect in the future
-
-	// local -----------------------------------
-	app.get('/unlink/local', isLoggedIn, function(req, res) {
-		var user            = req.user;
-		user.local.em    = undefined;
-		user.local.password = undefined;
-		user.save(function(err) {
-			res.redirect('/profile');
-		});
-	});
 
 // =============================================================================
 // CACHE SERVER CONTROLS PAGE
@@ -128,10 +104,17 @@ var User       = require('./models/user');
         if (req.isAuthenticated()) {
             var user = req.user;
             user.hasRole('admin', function (err, isAdmin) {
-                console.log( "Is user admin:", isAdmin );
-
                 if (isAdmin){
-                    res.render('admin.html');
+                    //TODO: Temporary hack until we get roles from mongodb.
+                    var static_roles = [ {'_id': '5448c2de9090d1b11ab3f19d', 'name': 'developer' },
+                                     {'_id': '5448c2de9090d1b11ab3f19c', 'name': 'admin' },
+                                     {'_id': '5448c2de9090d1b11ab3f19e', 'name': 'operator' }];
+                     User.find({},function(err, users){
+                        res.render('admin.html',{
+                            app_users : users,
+                            roles : static_roles
+                        });
+                    });
                 } else {
                     res.redirect('/');
                 }
@@ -141,12 +124,26 @@ var User       = require('./models/user');
         }
     });
 
+    // =============================================================================
+    // DELETE USER LINK
+    // Only admin privileges can delete
+    // =============================================================================
+    app.get('/delete/user/:user_id', function(req, res) {
+        if (req.isAuthenticated()) {
+            var user_id = req.params.user_id;
+            var user = req.user;
+            user.hasRole('admin', function (err, isAdmin) {
+                User.findOne({ '_id' : user_id },function(err, user_in_db){
+                    console.log(user_in_db);
+                    User.remove({'_id' : user_id}, function(error, result){
+                        if (error){
+                            console.log(error);
+                        }
+                        console.log(result);
+                    } );
+                    res.redirect('/admin');
+                });
+            });
+        }
+    });
 };
-
-// route middleware to ensure user is logged in
-function isLoggedIn(req, res, next) {
-	if (req.isAuthenticated())
-		return next();
-
-	res.redirect('/');
-}
