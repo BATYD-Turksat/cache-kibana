@@ -1,39 +1,132 @@
 {% extends 'header.html' %}
+
+{% block app-left-buttons %}
+<ul class="nav pull-left">
+    <div class="divButtons">
+        <a data-toggle="modal" href="#registerUser" class="registerUser btn"><i class='icon-plus'></i></a>
+    </div>
+</ul>
+{% endblock %}
+
+
 {% block app-content %}
-
 {% if app_users and app_users.length > 0 %}
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>User ID</th>
-        <th>User Name</th>
-        <th>Role</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for user in app_users %}
-    <tr>
-        <th>
-            {{ String(user['_id']) | escape }}
-        </th>
-        <th>
-            {{ user.local.email }}
-        </th>
+<style>
+table thead th {
+color: #33b5e5;
+}
+</style>
 
-        {% for role in roles %}
+<section class="body">
+<section class="container">
+    {% if (message.length > 0) %}
+    <div class="alert alert-danger">{{ message }}</div>
+    {% endif %}
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>User Name</th>
+            <th>Role</th>
+            <th>User ID</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in app_users %}
+        <tr>
+            <th>
+                {{ user.local.email }}
+            </th>
+
+            {% for role in roles %}
             {% if role['_id'] === String(user.roles[0]) %}
-                <th>
-                    {{role.name}}
-                </th>
+            <th>
+                {{role.name}}
+            </th>
             {% endif %}
+            {% endfor %}
+
+            <th>
+                {{ String(user['_id']) | escape }}
+            </th>
+
+            <th>
+                <a data-toggle="modal" data-id="{{ String(user['_id']) | escape }}" class="deleteUser btn btn-warning" href="#deleteUser">Delete</a>
+            </th>
+
+        </tr>
         {% endfor %}
-        <th>
-            <a href="/delete/user/{{ String(user['_id']) | escape }}" class="btn btn-default">Delete</a>
-        </th>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</section>
+</section>
+
+<script>
+    $(document).on("click", ".deleteUser", function () {
+        var userId = $(this).data('id');
+        console.log(userId);
+        $(".modal-body #userId").text( userId );
+        $(".modal-footer #userId").attr("href", "/delete/user/" + userId);
+    });
+
+    $(document).on("click", ".registerUser", function() {
+        $('#registerform')[0].reset();
+    });
+
+</script>
+
+<div class="modal hide fade" id="deleteUser">
+    <div class="modal-header">
+        <button class="close" data-dismiss="modal">×</button>
+        <h3>Warning!</h3>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure you want to delete user with id <span id="userId"></span> ?</p>
+    </div>
+    <div class="modal-footer">
+        <a href="/delete/user/{{ String(user['_id']) | escape }}" class="btn btn-warning" id="userId">Delete</a>
+        <a href="#" class="btn btn-primary" data-dismiss="modal">Cancel</a>
+    </div>
+</div>
 
 {% endif %}
+
+<div class="modal hide fade" id="registerUser">
+<div class="modal-body">
+    <div class="container">
+        <div class="span4"></div>
+        <div class="span4">
+            <h1><span class="fa fa-sign-in"></span> Add user</h1>
+
+            {% if (message.length > 0) %}
+            <div class="alert alert-danger">{{ message }}</div>
+            {% endif %}
+
+            <!-- USER REGISTER FORM -->
+            <form action="/register" method="post" autocomplete="off" id ="registerform">
+                <div class="form-group">
+                    <label>User</label>
+                    <input type="text" class="form-control span4" name="email">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control span4" name="password">
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select class="form-control span4" name="role">
+                        <option value="admin">Admin</option>
+                        <option value="developer">Developer</option>
+                        <option value="operator">Operator</option>
+                    </select>
+                </div>
+                <br/>
+                <button type="submit" class="btn btn-warning btn-lg">Add User</button>
+                <a href="#" class="btn btn-primary pull-right" data-dismiss="modal">Cancel</a>
+            </form>
+        </div>
+        <div class="span4"></div>
+    </div>
+</div>
+</div>
 {% endblock %}

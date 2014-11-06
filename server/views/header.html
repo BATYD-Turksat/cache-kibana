@@ -2,6 +2,8 @@
 
 {% block app-css %}
     <link rel="stylesheet" href="css/bootstrap.dark.min.css" type="text/css">
+    <script src="vendor/jquery/jquery-1.8.0.js"></script>
+    <script src="vendor/bootstrap/bootstrap.js"></script>
 {% endblock %}
 
 {% block app-header %}
@@ -11,6 +13,7 @@
             <div class="navbar-inner">
                 <div class="container-fluid">
                     <span class="brand"><img src="img/small.png"></span>
+                    {% block app-left-buttons %} {% endblock %}
                     <ul class="nav pull-right">
                         <div class="nav nav-pills">
                             <li><a href="/admin">Admin</a></li>

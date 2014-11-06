@@ -6,14 +6,7 @@ var User       = require('./models/user');
 	// show the home page (will also have our login links)
 	app.get('/', function(req, res) {
         if (req.isAuthenticated()) {
-            var user = req.user;
-            user.hasRole('admin', function (err, isAdmin) {
-                if (isAdmin){
                     res.redirect('/kibana');
-                } else {
-                    res.render('index.html');
-                }
-            });
         } else {
             res.redirect('/login');
         }
@@ -144,6 +137,60 @@ var User       = require('./models/user');
                     res.redirect('/admin');
                 });
             });
+        }
+    });
+
+    // =============================================================================
+    // REGISTER NEW USER
+    // Only admin privileges can add new user
+    // =============================================================================
+
+    app.post('/register',  function(req, res) {
+        if (req.isAuthenticated()) {
+            var user = req.user;
+            user.hasRole('admin', function (err, isAdmin) {
+                console.log( "Is user admin:", isAdmin );
+                if (isAdmin){
+                    if (req.body.email) {
+                        var email = req.body.email.toLowerCase(); // Use lower-case e-mails to avoid case-sensitive e-mail matching
+                    }
+                    // asynchronous
+                    process.nextTick(function() {
+                        User.findOne({ 'local.email' :  email }, function(err, user) {
+                            // if there are any errors, return the error
+                            if (err)
+                                console.log(err);
+
+                            // check to see if there is already a user with that name
+                            if (user) {
+                                console.log ( user + ' is already taken.');
+                            } else {
+                                // create the user
+                                var newUser            = new User();
+
+                                newUser.local.email     = email;
+                                newUser.local.password = newUser.generateHash(req.body.password);
+
+                                newUser.save(function(err) {
+                                    if (err)
+                                        console.log(err);
+                                });
+
+                                newUser.addRole(req.body.role, function (err) {
+                                    if (err){
+                                        console.log(err)
+                                    }
+                                });
+                            }
+                            res.redirect('/admin');
+                        });
+                    });
+                } else {
+                    res.redirect('/');
+                }
+            });
+        } else {
+            res.redirect('/');
         }
     });
 };
