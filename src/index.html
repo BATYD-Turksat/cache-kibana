@@ -61,8 +61,21 @@
             <div class="nav nav-pills">
                 <li><a href="/admin">Admin</a></li>
                 <li><a href="/controls">Controls</a></li>
-                <li><a href="#/dashboard/file/logstash.json">System Logs 1</a></li>
-                <li><a href="#/dashboard/script/logstash.js">System Logs 2</a></li>
+
+                <ul class="nav nav-pills timepicker-dropdown">
+                    <li class="dropdown">
+
+                        <a class="dropdown-toggle timepicker-dropdown" data-toggle="dropdown" href="" data-placement="bottom">
+                            System Monitor <i class="icon-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#/dashboard/file/performance.json">Performance</a></li>
+                            <li><a href="#/dashboard/file/os.json">Operating System</a></li>
+                            <li><a href="#/dashboard/file/proxy.json">Proxy</a></li>
+                            <li><a href="#/dashboard/file/logs.json">Logs</a></li>
+                            <li><a href="#/dashboard/file/nginx.json">Kibana</a></li>
+                        </ul>
+                    </li></ul>
                 <li><a href="/logout">Log Out</a></li>
             </div>
           </ul>

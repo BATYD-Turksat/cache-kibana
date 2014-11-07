@@ -6,7 +6,7 @@ var User       = require('./models/user');
 	// show the home page (will also have our login links)
 	app.get('/', function(req, res) {
         if (req.isAuthenticated()) {
-                    res.redirect('/kibana');
+                    res.redirect('/kibana/#/dashboard/file/performance.json');
         } else {
             res.redirect('/login');
         }
@@ -31,7 +31,7 @@ var User       = require('./models/user');
 
 		// process the login form
 		app.post('/login', passport.authenticate('local-login', {
-			successRedirect : '/kibana', // redirect to the secure profile section
+			successRedirect : '/kibana/#/dashboard/file/performance.json', // redirect to the secure profile section
 			failureRedirect : '/login', // redirect back to the signup page if there is an error
 			failureFlash : true // allow flash messages
 		}));

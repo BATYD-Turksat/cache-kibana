@@ -1,0 +1,450 @@
+{
+    "rows": [
+        {
+            "title": "Chart",
+            "height": "80px",
+            "panels": [
+                {
+                    "error": false,
+                    "span": 12,
+                    "editable": true,
+                    "type": "stats",
+                    "loadingEditor": false,
+                    "queries": {
+                        "mode": "selected",
+                        "ids": [
+                            4
+                        ]
+                    },
+                    "style": {
+                        "font-size": "24pt"
+                    },
+                    "format": "float",
+                    "mode": "max",
+                    "display_breakdown": "no",
+                    "sort_field": "",
+                    "sort_reverse": false,
+                    "label_name": "Query",
+                    "value_name": "Value",
+                    "spyable": true,
+                    "show": {
+                        "count": true,
+                        "min": true,
+                        "max": true,
+                        "mean": true,
+                        "std_deviation": true,
+                        "sum_of_squares": true,
+                        "total": true,
+                        "variance": true
+                    },
+                    "title": "Cache Efficiency",
+                    "field": "global.proxy.node.bandwidth_hit_ratio"
+                }
+            ],
+            "collapse": false,
+            "collapsable": true,
+            "editable": true,
+            "notice": false
+        },
+        {
+            "title": "TOP LIST",
+            "height": "150px",
+            "editable": true,
+            "collapse": false,
+            "collapsable": true,
+            "panels": [
+                {
+                    "height": "200px",
+                    "chart": "table",
+                    "field": "squid_content_format",
+                    "span": 6,
+                    "type": "terms",
+                    "title": "Top 10 content types which are downloaded",
+                    "exclude": [],
+                    "missing": true,
+                    "other": true,
+                    "size": 10,
+                    "order": "count",
+                    "style": {
+                        "font-size": "10pt"
+                    },
+                    "donut": false,
+                    "tilt": false,
+                    "labels": true,
+                    "arrangement": "horizontal",
+                    "counter_pos": "above",
+                    "spyable": true,
+                    "queries": {
+                        "mode": "selected",
+                        "ids": [
+                            9
+                        ]
+                    },
+                    "tmode": "terms",
+                    "tstat": "total",
+                    "valuefield": "",
+                    "editable": true
+                },
+                {
+                    "height": "200px",
+                    "chart": "table",
+                    "field": "squid_dest_ip",
+                    "span": 6,
+                    "type": "terms",
+                    "title": "Top 10 Sites Download from",
+                    "exclude": [],
+                    "missing": true,
+                    "other": true,
+                    "size": 10,
+                    "order": "count",
+                    "style": {
+                        "font-size": "10pt"
+                    },
+                    "donut": false,
+                    "tilt": false,
+                    "labels": true,
+                    "arrangement": "horizontal",
+                    "counter_pos": "above",
+                    "spyable": true,
+                    "queries": {
+                        "mode": "selected",
+                        "ids": [
+                            9
+                        ]
+                    },
+                    "tmode": "terms",
+                    "tstat": "total",
+                    "valuefield": ""
+                }
+            ],
+            "notice": false
+        },
+        {
+            "title": "",
+            "height": "150px",
+            "editable": true,
+            "collapse": false,
+            "collapsable": true,
+            "panels": [
+                {
+                    "error": false,
+                    "span": 12,
+                    "editable": true,
+                    "type": "table",
+                    "loadingEditor": false,
+                    "size": 100,
+                    "pages": 5,
+                    "offset": 0,
+                    "sort": [
+                        "@timestamp",
+                        "desc"
+                    ],
+                    "overflow": "min-height",
+                    "fields": [
+                        "squid_request_hostname",
+                        "squid_action",
+                        "squid_content_type",
+                        "@timestamp"
+                    ],
+                    "highlight": [],
+                    "sortable": true,
+                    "header": true,
+                    "paging": true,
+                    "field_list": false,
+                    "all_fields": false,
+                    "trimFactor": 300,
+                    "localTime": false,
+                    "timeField": "@timestamp",
+                    "spyable": true,
+                    "queries": {
+                        "mode": "selected",
+                        "ids": [
+                            15
+                        ]
+                    },
+                    "style": {
+                        "font-size": "9pt"
+                    },
+                    "normTimes": true,
+                    "title": "Development"
+                }
+            ],
+            "notice": false
+        }
+    ],
+    "services": {
+        "query": {
+            "list": {
+                "0": {
+                    "query": "host:\"atsproxy.atsproxy\" AND plugin:\"interface\" AND plugin_instance:\"eth11\" AND collectd_type:\"if_octets\"",
+                    "id": 0,
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "color": "#7EB26D"
+                },
+                "1": {
+                    "id": 1,
+                    "color": "#EAB839",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "host:\"atsproxy.atsproxy\" AND plugin:\"interface\" AND plugin_instance:\"eth5\" AND collectd_type:\"if_octets\""
+                },
+                "2": {
+                    "id": 2,
+                    "color": "#6ED0E0",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "plugin:\"load\" AND host:\"atsproxy.atsproxy\""
+                },
+                "3": {
+                    "id": 3,
+                    "color": "#EF843C",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "host:\"atsproxy.atsproxy\" AND plugin:\"disk\" AND plugin_instance:\"sda5\" AND collectd_type:\"disk_octets\""
+                },
+                "4": {
+                    "id": 4,
+                    "color": "#E24D42",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "_type:\"ats_stats\""
+                },
+                "5": {
+                    "id": 5,
+                    "color": "#1F78C1",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "host:\"atsproxy.atsproxy\" AND plugin:\"memory\" AND collectd_type:\"memory\" AND type_instance:\"buffered\""
+                },
+                "6": {
+                    "id": 6,
+                    "color": "#BA43A9",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "host:\"atsproxy.atsproxy\" AND plugin:\"memory\" AND collectd_type:\"memory\" AND type_instance:\"used\""
+                },
+                "7": {
+                    "id": 7,
+                    "color": "#705DA0",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "host:\"atsproxy.atsproxy\" AND plugin:\"memory\" AND collectd_type:\"memory\" AND type_instance:\"cached\""
+                },
+                "8": {
+                    "id": 8,
+                    "color": "#508642",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "host:\"atsproxy.atsproxy\" AND plugin:\"memory\" AND collectd_type:\"memory\" AND type_instance:\"free\""
+                },
+                "9": {
+                    "id": 9,
+                    "color": "#CCA300",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "@type:\"trafficserver\" AND @source_path:\"squid.log\""
+                },
+                "10": {
+                    "id": 10,
+                    "color": "#447EBC",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "@message == \"exception\" or @message == \"Exception\" or @message == \"EXCEPTION\""
+                },
+                "11": {
+                    "id": 11,
+                    "color": "#C15C17",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "@message == \"error\" or @message == \"Error\" or @message == \"ERROR\""
+                },
+                "12": {
+                    "id": 12,
+                    "color": "#890F02",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "@message == \"warn\" or @message == \"Warn\" or @message == \"WARN\""
+                },
+                "13": {
+                    "id": 13,
+                    "color": "#0A437C",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "@message == \"fail\" or @message == \"Fail\" or @message == \"FAIL\""
+                },
+                "14": {
+                    "id": 14,
+                    "color": "#6D1F62",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "@message == \"crash\" or @message == \"Crash\" or @message == \"CRASH\""
+                },
+                "15": {
+                    "id": 15,
+                    "color": "#584477",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "@type:\"trafficserver\" AND (squid_content_type:\"video\" OR squid_content_type:\"audio\")"
+                }
+            },
+            "ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+            ]
+        },
+        "filter": {
+            "list": {
+                "0": {
+                    "type": "time",
+                    "field": "@timestamp",
+                    "from": "now-1h",
+                    "to": "now",
+                    "mandate": "must",
+                    "active": true,
+                    "alias": "",
+                    "id": 0
+                }
+            },
+            "ids": [
+                0
+            ]
+        }
+    },
+    "title": "Turksat Cache",
+    "failover": false,
+    "index": {
+        "default": "ADD_A_TIME_FILTER",
+        "pattern": "[logstash-]YYYY.MM.DD",
+        "interval": "day",
+        "warm_fields": true
+    },
+    "style": "dark",
+    "editable": true,
+    "panel_hints": true,
+    "pulldowns": [
+        {
+            "type": "query",
+            "collapse": true,
+            "notice": false,
+            "enable": true,
+            "query": "*",
+            "pinned": true,
+            "history": [
+                "@type:\"trafficserver\" AND (squid_content_type:\"video\" OR squid_content_type:\"audio\")",
+                "@message == \"crash\" or @message == \"Crash\" or @message == \"CRASH\"",
+                "@message == \"fail\" or @message == \"Fail\" or @message == \"FAIL\"",
+                "@message == \"warn\" or @message == \"Warn\" or @message == \"WARN\"",
+                "@message == \"error\" or @message == \"Error\" or @message == \"ERROR\"",
+                "@message == \"exception\" or @message == \"Exception\" or @message == \"EXCEPTION\"",
+                "@type:\"trafficserver\" AND @source_path:\"squid.log\"",
+                "host:\"atsproxy.atsproxy\" AND plugin:\"memory\" AND collectd_type:\"memory\" AND type_instance:\"free\"",
+                "host:\"atsproxy.atsproxy\" AND plugin:\"memory\" AND collectd_type:\"memory\" AND type_instance:\"cached\"",
+                "host:\"atsproxy.atsproxy\" AND plugin:\"memory\" AND collectd_type:\"memory\" AND type_instance:\"used\""
+            ],
+            "remember": 10
+        },
+        {
+            "type": "filtering",
+            "collapse": true,
+            "notice": true,
+            "enable": true
+        }
+    ],
+    "nav": [
+        {
+            "type": "timepicker",
+            "collapse": false,
+            "notice": false,
+            "enable": true,
+            "status": "Stable",
+            "time_options": [
+                "5m",
+                "15m",
+                "1h",
+                "6h",
+                "12h",
+                "24h",
+                "2d",
+                "7d",
+                "30d"
+            ],
+            "refresh_intervals": [
+                "5s",
+                "10s",
+                "30s",
+                "1m",
+                "5m",
+                "15m",
+                "30m",
+                "1h",
+                "2h",
+                "1d"
+            ],
+            "timefield": "@timestamp",
+            "now": true,
+            "filter_id": 0
+        }
+    ],
+    "loader": {
+        "save_gist": false,
+        "save_elasticsearch": true,
+        "save_local": true,
+        "save_default": true,
+        "save_temp": true,
+        "save_temp_ttl_enable": true,
+        "save_temp_ttl": "30d",
+        "load_gist": false,
+        "load_elasticsearch": true,
+        "load_elasticsearch_size": 20,
+        "load_local": false,
+        "hide": false
+    },
+    "refresh": "30s"
+}
