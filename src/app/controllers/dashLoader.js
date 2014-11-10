@@ -7,13 +7,15 @@ function (angular, _) {
 
   var module = angular.module('kibana.controllers');
 
-  module.controller('dashLoader', function($scope, $http, timer, dashboard, alertSrv, $location) {
+  module.controller('dashLoader', function($scope, $http, timer, dashboard, alertSrv, $location, $cookies) {
     $scope.loader = dashboard.current.loader;
 
     $scope.init = function() {
       $scope.gist_pattern = /(^\d{5,}$)|(^[a-z0-9]{10,}$)|(gist.github.com(\/*.*)\/[a-z0-9]{5,}\/*$)/;
       $scope.gist = $scope.gist || {};
       $scope.elasticsearch = $scope.elasticsearch || {};
+      $scope.cookieuserrole =  $cookies['user-role'];
+      $scope.cookieusername =  $cookies['user-name'];
     };
 
     $scope.showDropdown = function(type) {

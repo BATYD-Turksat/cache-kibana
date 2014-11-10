@@ -72,7 +72,10 @@ color: #33b5e5;
     $(document).on("click", ".registerUser", function() {
         $('#registerform')[0].reset();
     });
-
+    $( document ).ready( function() {
+                $(".registerUser").attr('title', 'Add user');
+            }
+    );
 </script>
 
 <div class="modal hide fade" id="deleteUser">

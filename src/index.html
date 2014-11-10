@@ -57,9 +57,8 @@
           <span class="brand"><img src="img/small.png"> </span>
           <ul class="nav pull-left" ng-controller='dashLoader' ng-init="init()" ng-include="'app/partials/dashLoader.html'">
           </ul>
-          <ul class="nav pull-right">
+          <ul class="nav pull-right" ng-controller='dashLoader' ng-init="init()">
             <div class="nav nav-pills">
-                <li><a href="/admin">Admin</a></li>
                 <li><a href="/controls">Controls</a></li>
 
                 <ul class="nav nav-pills timepicker-dropdown">
@@ -75,8 +74,19 @@
                             <li><a href="#/dashboard/file/logs.json">Logs</a></li>
                             <li><a href="#/dashboard/file/nginx.json">Kibana</a></li>
                         </ul>
-                    </li></ul>
-                <li><a href="/logout">Log Out</a></li>
+                    </li>
+                </ul>
+                <ul class="nav nav-pills timepicker-dropdown">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle timepicker-dropdown" data-toggle="dropdown" href="" data-placement="bottom">
+                            Hello <span>{{cookieusername}}</span> <i class="icon-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li id="admin-link" ng-show="cookieuserrole == 'admin'" ><a href="/admin">Manage Users</a></li>
+                            <li><a href="/logout">Log Out</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
           </ul>
         </div>

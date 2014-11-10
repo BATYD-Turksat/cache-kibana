@@ -6,8 +6,27 @@ var User       = require('./models/user');
 	// show the home page (will also have our login links)
 	app.get('/', function(req, res) {
         if (req.isAuthenticated()) {
+            var user = req.user;
+            res.cookie('user-name', user.local.email, { maxAge: 2592000000 });
+            user.hasRole('admin', function (err, isAdmin) {
+                if (isAdmin){
+                    res.cookie('user-role', 'admin', { maxAge: 2592000000 });
                     res.redirect('/kibana/#/dashboard/file/performance.json');
+                } else {
+                    user.hasRole('developer', function (err, isDeveloper) {
+                        if (isDeveloper){
+                            res.cookie('user-role', 'developer', { maxAge: 2592000000 });
+                            res.redirect('/kibana/#/dashboard/file/performance.json');
+                        } else {
+                            res.cookie('user-role', 'operator', { maxAge: 2592000000 });
+                            res.redirect('/kibana/#/dashboard/file/performance.json');
+                        }
+                    });
+                }
+            });
         } else {
+            res.clearCookie('user-name');
+            res.clearCookie('user-role');
             res.redirect('/login');
         }
 	});
@@ -31,7 +50,7 @@ var User       = require('./models/user');
 
 		// process the login form
 		app.post('/login', passport.authenticate('local-login', {
-			successRedirect : '/kibana/#/dashboard/file/performance.json', // redirect to the secure profile section
+			successRedirect : '/', // redirect to the secure profile section
 			failureRedirect : '/login', // redirect back to the signup page if there is an error
 			failureFlash : true // allow flash messages
 		}));

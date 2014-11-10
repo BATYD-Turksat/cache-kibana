@@ -3,10 +3,23 @@
 {% block app-css %}
     <link rel="stylesheet" href="css/bootstrap.dark.min.css" type="text/css">
     <script src="vendor/jquery/jquery-1.8.0.js"></script>
+    <script src="vendor/jquery/jquery.cookie.js"></script>
     <script src="vendor/bootstrap/bootstrap.js"></script>
 {% endblock %}
 
 {% block app-header %}
+<script>
+    $( document ).ready( function() {
+        console.log("Get cookie -1 " + $.cookie("user-name"));
+        console.log("Get cookie -2 " + $.cookie('user-name'));
+        $("#cookie-user-name").text($.cookie("user-name"));
+
+        if ($.cookie("user-role")==='admin') {
+            $("#admin-link").show();
+        }
+    });
+</script>
+
 <section class="header">
     <section class="container-fluid">
         <div class="navbar navbar-static-top">
@@ -16,7 +29,6 @@
                     {% block app-left-buttons %} {% endblock %}
                     <ul class="nav pull-right">
                         <div class="nav nav-pills">
-                            <li><a href="/admin">Admin</a></li>
                             <li><a href="/controls">Controls</a></li>
 
                             <ul class="nav nav-pills timepicker-dropdown">
@@ -32,8 +44,19 @@
                                         <li><a href="/kibana/#/dashboard/file/logs.json">Logs</a></li>
                                         <li><a href="/kibana/#/dashboard/file/nginx.json">Kibana</a></li>
                                     </ul>
-                                </li></ul>
-                            <li><a href="/logout">Log Out</a></li>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-pills timepicker-dropdown">
+                                <li class="dropdown">
+                                    <a class="dropdown-toggle timepicker-dropdown" data-toggle="dropdown" href="" data-placement="bottom">
+                                        Hello <span id="cookie-user-name"></span> <i class="icon-caret-down"></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li id="admin-link" style="display: none" ><a href="/admin">Manage Users</a></li>
+                                        <li><a href="/logout">Log Out</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
                         </div>
                     </ul>
                 </div>
