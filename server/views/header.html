@@ -10,8 +10,6 @@
 {% block app-header %}
 <script>
     $( document ).ready( function() {
-        console.log("Get cookie -1 " + $.cookie("user-name"));
-        console.log("Get cookie -2 " + $.cookie('user-name'));
         $("#cookie-user-name").text($.cookie("user-name"));
 
         if ($.cookie("user-role")==='admin') {

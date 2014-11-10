@@ -1,3 +1,5 @@
+var express  = require('express');
+
 module.exports = function(app, passport) {
 var User       = require('./models/user');
 
@@ -61,7 +63,6 @@ var User       = require('./models/user');
             if (req.isAuthenticated()) {
                 var user = req.user;
                 user.hasRole('admin', function (err, isAdmin) {
-                    console.log( "Is user admin:", isAdmin );
                     if (isAdmin){
                         res.render('signup.html', { message: req.flash('signupMessage') });
                     } else {
@@ -95,8 +96,6 @@ var User       = require('./models/user');
         if (req.isAuthenticated()) {
             var user = req.user;
             user.hasRole('operator', function (err, isOperator) {
-                console.log( "Is user operator:", isOperator );
-
                 if (isOperator){
                     res.redirect('/');
                 } else {
@@ -168,7 +167,6 @@ var User       = require('./models/user');
         if (req.isAuthenticated()) {
             var user = req.user;
             user.hasRole('admin', function (err, isAdmin) {
-                console.log( "Is user admin:", isAdmin );
                 if (isAdmin){
                     if (req.body.email) {
                         var email = req.body.email.toLowerCase(); // Use lower-case e-mails to avoid case-sensitive e-mail matching

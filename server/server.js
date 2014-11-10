@@ -48,8 +48,9 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
-var staticMiddleware = express.static(__dirname + '/../src');
+// kibana static file routes ===================================================
 
+var staticMiddleware = express.static(__dirname + '/../src');
 app.use("/kibana", function(req, res, next) {
     if (req.isAuthenticated()) {
         staticMiddleware(req, res, next);
@@ -57,6 +58,26 @@ app.use("/kibana", function(req, res, next) {
         res.redirect('/login');
     }
 });
+
+// 404  routes ===================================================
+ app.use(function(req, res, next){
+ res.status(404);
+
+ // respond with html page
+ if (req.accepts('html')) {
+ res.render('404', { url: req.url });
+ return;
+ }
+
+ // respond with json
+ if (req.accepts('json')) {
+ res.send({ error: 'Not found' });
+ return;
+ }
+
+ // default to plain-text. send()
+ res.type('txt').send('Not found');
+ });
 
 // launch ======================================================================
 app.listen(port);
