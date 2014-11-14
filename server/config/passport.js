@@ -75,7 +75,6 @@ module.exports = function(passport) {
         // asynchronous
         process.nextTick(function() {
             User.count({}, function (err, count) {
-                console.log("Number of users:", count);
                 if (count > 0) {
                     return done(null, false, req.flash('signupMessage', 'Only admin can add new user'));
                 }
@@ -85,19 +84,13 @@ module.exports = function(passport) {
 
                 newUser.local.email = email;
                 newUser.local.password = newUser.generateHash(password);
+                newUser.local.role = 'admin';
 
                 newUser.save(function (err) {
                     if (err)
                         return done(err);
 
                     return done(null, newUser);
-                });
-
-                newUser.addRole('admin', function (err) {
-                    if (err) {
-                        console.log(err)
-                        return done(err);
-                    }
                 });
             });
         });

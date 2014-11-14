@@ -14,9 +14,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
 var swig         = require('swig');
-
 var configDB = require('./config/database.js');
-var rbac = require('./app/permissions'); //TODO: Temporary hack. This should be performed in system installation
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database

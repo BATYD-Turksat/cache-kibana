@@ -59,7 +59,7 @@
           </ul>
           <ul class="nav pull-right" ng-controller='dashLoader' ng-init="init()">
             <div class="nav nav-pills">
-                <li><a href="/controls">Controls</a></li>
+                <li><a href="/controls" ng-show="cookieuserrole == 'admin' || cookieuserrole == 'developer'" >Controls</a></li>
 
                 <ul class="nav nav-pills timepicker-dropdown">
                     <li class="dropdown">

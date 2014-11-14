@@ -39,9 +39,9 @@ color: #33b5e5;
             </th>
 
             {% for role in roles %}
-            {% if role['_id'] === String(user.roles[0]) %}
+            {% if role === String(user.local.role) %}
             <th>
-                {{role.name}}
+                {{role}}
             </th>
             {% endif %}
             {% endfor %}

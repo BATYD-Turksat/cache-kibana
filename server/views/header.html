@@ -14,6 +14,11 @@
 
         if ($.cookie("user-role")==='admin') {
             $("#admin-link").show();
+            $("#developer-link").show();
+        }
+
+        if ($.cookie("user-role")==='developer') {
+            $("#developer-link").show();
         }
     });
 </script>
@@ -32,7 +37,7 @@
                             <ul class="nav nav-pills timepicker-dropdown">
                                 <li class="dropdown">
 
-                                    <a class="dropdown-toggle timepicker-dropdown" data-toggle="dropdown" href="" data-placement="bottom">
+                                    <a id="developer-link" style="display: none" class="dropdown-toggle timepicker-dropdown" data-toggle="dropdown" href="" data-placement="bottom">
                                         System Monitor <i class="icon-caret-down"></i>
                                     </a>
                                     <ul class="dropdown-menu">
