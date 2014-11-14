@@ -1,5 +1,3 @@
-var express  = require('express');
-
 module.exports = function(app, passport) {
 var User       = require('./models/user');
 
@@ -47,7 +45,13 @@ var User       = require('./models/user');
 		// LOGIN ===============================
 		// show the login form
 		app.get('/login', function(req, res) {
-			res.render('login.html', { message: req.flash('loginMessage') });
+            User.count({}, function( err, count){
+                if (count == 0) {
+                    res.redirect('/signup');
+                } else {
+                    res.render('login.html', { message: req.flash('loginMessage') });
+                }
+            });
 		});
 
 		// process the login form
@@ -58,27 +62,15 @@ var User       = require('./models/user');
 		}));
 
 		// SIGNUP =================================
-		// show the signup form
+		// show the signup if no user is registered. Note: First user is by default admin.
 		app.get('/signup', function(req, res) {
-            if (req.isAuthenticated()) {
-                var user = req.user;
-                user.hasRole('admin', function (err, isAdmin) {
-                    if (isAdmin){
-                        res.render('signup.html', { message: req.flash('signupMessage') });
-                    } else {
-                        res.redirect('/');
-                    }
-                });
-            } else {
-                User.count({}, function( err, count){
-                    console.log( "Number of users:", count );
-                    if (count == 0) {
-                        res.render('signup.html', { message: req.flash('signupMessage') });
-                    } else {
-                        res.redirect('/');
-                    }
-                })
-            }
+            User.count({}, function( err, count){
+                if (count == 0) {
+                    res.render('signup.html', { message: req.flash('signupMessage') });
+                } else {
+                    res.redirect('/');
+                }
+            })
         });
 
 		// process the signup form
@@ -123,7 +115,8 @@ var User       = require('./models/user');
                      User.find({},function(err, users){
                         res.render('admin.html',{
                             app_users : users,
-                            roles : static_roles
+                            roles : static_roles,
+                            message: req.flash('adminMessage')
                         });
                     });
                 } else {
@@ -144,20 +137,25 @@ var User       = require('./models/user');
             var user_id = req.params.user_id;
             var user = req.user;
             user.hasRole('admin', function (err, isAdmin) {
-                User.findOne({ '_id' : user_id },function(err, user_in_db){
-                    console.log(user_in_db);
-                    User.remove({'_id' : user_id}, function(error, result){
-                        if (error){
-                            console.log(error);
-                        }
-                        console.log(result);
-                    } );
+                if (user["_id"] == user_id) {
+                    req.flash('adminMessage', 'Can not delete self!');
                     res.redirect('/admin');
-                });
+                } else {
+                    User.findOne({ '_id': user_id }, function (err, user_in_db) {
+                        User.remove({'_id': user_id}, function (error, result) {
+                            if (err) {
+                                console.log(err);
+                                req.flash('adminMessage', err);
+                            }
+                        });
+                        res.redirect('/admin');
+                    });
+                }
             });
+        } else {
+            res.redirect('/');
         }
     });
-
     // =============================================================================
     // REGISTER NEW USER
     // Only admin privileges can add new user
@@ -175,12 +173,13 @@ var User       = require('./models/user');
                     process.nextTick(function() {
                         User.findOne({ 'local.email' :  email }, function(err, user) {
                             // if there are any errors, return the error
-                            if (err)
+                            if (err) {
                                 console.log(err);
-
+                                req.flash('adminMessage', err);
+                            }
                             // check to see if there is already a user with that name
                             if (user) {
-                                console.log ( user + ' is already taken.');
+                                req.flash('adminMessage', user + ' is already taken.');
                             } else {
                                 // create the user
                                 var newUser            = new User();
@@ -189,13 +188,16 @@ var User       = require('./models/user');
                                 newUser.local.password = newUser.generateHash(req.body.password);
 
                                 newUser.save(function(err) {
-                                    if (err)
+                                    if (err) {
                                         console.log(err);
+                                        req.flash('adminMessage', err);
+                                    }
                                 });
 
                                 newUser.addRole(req.body.role, function (err) {
                                     if (err){
                                         console.log(err)
+                                        req.flash('adminMessage', err);
                                     }
                                 });
                             }
