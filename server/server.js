@@ -14,12 +14,18 @@ var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
 var swig         = require('swig');
-var configDB = require('./config/database.js');
+var configDB     = require('./config/database');
+
+var yml          = require('./app/yaml/yml-parser');
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
 
 require('./config/passport')(passport); // pass passport for configuration
+
+// Read the yml files.
+var yml_conf = yml.readYML();
+console.log(yml_conf);
 
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
