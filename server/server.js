@@ -23,9 +23,8 @@ mongoose.connect(configDB.url); // connect to our database
 
 require('./config/passport')(passport); // pass passport for configuration
 
-// Read the yml files.
-var yml_conf = yml.readYML();
-console.log(yml_conf);
+// attach the yml files to application.
+app.yml_conf = yml.readYML();
 
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
@@ -44,7 +43,7 @@ app.enable('trust proxy');
 
 // required for passport
 console.log("Cookie secret: " + process.env.CACHE_COOKIE);
-app.use(session({ secret: process.env.CACHE_COOKIE })); // session secret
+//app.use(session({ secret: process.env.CACHE_COOKIE })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session

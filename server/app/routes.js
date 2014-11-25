@@ -90,6 +90,14 @@ var User       = require('./models/user');
         }
     });
 
+    //TODO: Enable authentication for the rest API
+    app.get('/rest', function(req, res) {
+        console.log(app.yml_conf);
+        res.send(JSON.stringify(app.yml_conf));
+        res.end();
+    });
+
+
 // =============================================================================
 // ADMIN CONTROL PAGE
 // Only admin privileges can see controls

@@ -1,4 +1,57 @@
 {% extends 'header.html' %}
 {% block app-content %}
-        <p> Hello ATS control page!</p>
+    <style>
+        ul { padding-left:20px; list-style:none; }
+        li { margin-bottom:10px; }
+    </style>
+
+<div ng-app="myApp">
+    <div ng-controller="myCtrl">
+        <div class="container">
+            <div class="center-block">
+                <div class="row">
+                    <div class="span2"></div>
+                    <div class="span8">
+                        <table>
+                            <tr>
+                                <td><json-tree json="jsonData" node="nodeOptions" edit-level="low" collapsed-level="10"></json-tree></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="span2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+<script src="vendor/angular/json-tree.js"></script>
+<script>
+    (function(){
+
+        var myApp = angular.module('myApp', ['json-tree']);
+
+        myApp.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
+
+            // TODO: Add the API path to a local variable instead of hardcoded URI.
+            $http.get('http://localhost:8080/rest').
+                    success(function (data) {
+                        console.log("This is the data");
+                        console.log(data);
+                        $scope.jsonData = data;
+                        $scope.nodeOptions.refresh();
+                    }).error(function () {
+                        alert("Server error!");
+                    });
+
+            // Needed for the first view to be created.
+            function defaultData() {
+                return {
+                };
+            }
+            $scope.jsonData = defaultData();
+        }])
+    })()
+</script>
 {% endblock %}
