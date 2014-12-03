@@ -25,15 +25,19 @@
             var template =
                 '<ul ng-hide="node.isCollapsed">' +
                     '<li ng-repeat="key in utils.keys(json) track by key">' +
-                            '<span  class="key" ng-click="utils.clickNode(childs[key])" >' +
-                            '<i ng-show="childs[key].isCollapsed && (childs[key].type() === \'object\' || childs[key].type() === \'array\')" class="icon-plus-sign-alt icon-large"></i>' +
+                    '<div class="form-group">' +
+                            '<div  class="text-primary" class="key" ng-click="utils.clickNode(childs[key])" >' +
+                            '<i ng-show="childs[key].isCollapsed && (childs[key].type() === \'object\' || childs[key].type() === \'array\')" class="icon-plus-sign-alt icon-large" ></i>' +
                             '<i ng-show="childs[key].isCollapsed === false && (childs[key].type() === \'object\' || childs[key].type() === \'array\')" class="icon-minus-sign-alt icon-large"></i>' +
-                            ' {{ key }} </span>' +
-                            '<span ng-hide="childs[key].isObject()">' +
-                                '<input ng-show="childs[key].type() === \'number\'" type="number" ng-model="json[key]"/>' +
-                                '<input ng-show="childs[key].type() !== \'number\'" type="text" ng-model="json[key]" ng-change="utils.validateNode(key)" placeholder="null"/>' +
-                            '</span>' +
+                            ' {{ key }} </div>' +
+                            '<div class="control">' +
+                            '<div ng-hide="childs[key].isObject()">' +
+                                '<input ng-show="childs[key].type() === \'number\'" type="number" id="json[key]" name="json[key]" ng-model="json[key]" class="form-control" bs-modifiable required/>' +
+                                '<input ng-show="childs[key].type() !== \'number\'" type="text" id="json[key]" name="json[key]" ng-model="json[key]" ng-change="utils.validateNode(key)" placeholder="null" class="form-control" bs-modifiable required/>' +
+                            '</div>' +
+                            '</div>' +
                             '<json-tree json="json[key]" collapsed-level="{{+collapsedLevel - 1}}" node="childs[key]" ng-show="childs[key].isObject()"></json-tree>' +
+                    '</div>' +
                     '</li>' +
                 '</ul>';
             function getTemplatePromise() {
@@ -61,35 +65,6 @@
 
                     /* define auxiliary functions */
                     $scope.utils = {
-
-                        /* prettify json view */
-                        wrap: {
-                            start: function(node){
-                                if (node === undefined || node === null) return '';
-                                switch (node.type()){
-                                    default: return '';
-                                };
-                            },
-                            middle: function(node){
-                                if (node === undefined || node === null) return '';
-                                console.log(node);
-                                switch (node.type()){
-                                    default: return '';
-                                };
-                            },
-                            end: function(node){
-                                if (node === undefined || node === null) return '';
-                                switch (node.type()){
-                                    //case 'array': return ']';
-                                    //case 'object': return '}';
-                                    default: return '';
-                                };
-                            },
-                            isLastIndex: function(node, index){
-                                if (node === undefined || node === null) return true;
-                                else return index >= node.length();
-                            }
-                        },
 
                         /* collapse/expand node by clicking */
                         clickNode: function(node){

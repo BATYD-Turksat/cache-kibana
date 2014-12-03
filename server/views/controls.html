@@ -1,25 +1,57 @@
 {% extends 'header.html' %}
 {% block app-content %}
-    <style>
-        ul { padding-left:20px; list-style:none; }
-        li { margin-bottom:10px; }
-    </style>
-
+<style>
+    ul { padding-left:20px; list-style:none; }
+    li { margin-bottom:10px; }
+    hr {
+        display: block;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        margin-left: auto;
+        margin-right: auto;
+        border-style: inset;
+        border-width: 1px;
+    }
+        .pending-update { background-color: pink }
+</style>
+<link rel="stylesheet" href="css/form-style.css">
 <div ng-app="myApp">
     <div ng-controller="myCtrl">
         <div class="container">
             <div class="center-block">
-                <div class="row">
-                    <div class="span2"></div>
-                    <div class="span8">
-                        <table>
-                            <tr>
-                                <td><json-tree json="jsonData" node="nodeOptions" edit-level="low" collapsed-level="10"></json-tree></td>
-                            </tr>
-                        </table>
+                <form name="myForm" novalidate>
+                    <!-- Buttons -->
+                    <div class="form-group">
+                        <div class="control buttons">
+                            <button
+                                    type="submit"
+                                    class="btn btn-warning"
+                                    ng-click="updateChanges()"
+                                    ng-disabled="!myForm.modified"
+                                    >
+                                Update Changes
+                            </button>
+                            <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    ng-disabled="!myForm.modified"
+                                    ng-click="syncLatestFromServer()"
+                                    >
+                                Reset Changes
+                            </button>
+                        </div>
                     </div>
-                    <div class="span2"></div>
-                </div>
+
+
+                        <div class="row">
+                                <table>
+                                    <tr>
+                                        <td><json-tree json="jsonData" node="nodeOptions" edit-level="low" collapsed-level="2"></json-tree></td>
+                                    </tr>
+                                </table>
+                        </div>
+
+                </form>
             </div>
         </div>
     </div>
@@ -27,30 +59,53 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
 <script src="vendor/angular/json-tree.js"></script>
+<script src="vendor/angular/angular-input-modified.js"></script>
 <script>
     (function(){
 
-        var myApp = angular.module('myApp', ['json-tree']);
+        var myApp = angular.module('myApp', ['json-tree', 'ngInputModified']);
 
         myApp.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
 
-            // TODO: Add the API path to a local variable instead of hardcoded URI.
-            $http.get('http://localhost:8080/rest').
-                    success(function (data) {
-                        console.log("This is the data");
-                        console.log(data);
-                        $scope.jsonData = data;
-                        $scope.nodeOptions.refresh();
-                    }).error(function () {
+                $http.get('controls/api').
+                        success(function (data) {
+                            $scope.jsonData = data;
+                            $scope.nodeOptions.refresh();
+                        }).error(function () {
+                            alert("Server error!");
+                        });
+
+                // Needed for the first view to be created.
+                function defaultData() {
+                    return {
+                    };
+                }
+
+                $scope.jsonData = defaultData();
+
+                $scope.updateChanges = function(){
+                    $scope.myForm.$setPristine();
+                    console.log($scope.jsonData);
+                    $http({
+                        url: 'controls/api',
+                        method: "POST",
+                        data: JSON.stringify($scope.jsonData),
+                        headers: {'Content-Type': 'application/json'}
+                    }).success(function (data, status, headers, config) {
+                    }).error(function (data, status, headers, config) {
                         alert("Server error!");
                     });
+                }
 
-            // Needed for the first view to be created.
-            function defaultData() {
-                return {
-                };
-            }
-            $scope.jsonData = defaultData();
+                $scope.syncLatestFromServer = function(){
+                    $http.get('http://localhost:8082/api').
+                            success(function (data) {
+                                $scope.jsonData = data;
+                                $scope.nodeOptions.refresh();
+                            }).error(function () {
+                                alert("Server error!");
+                            });
+                }
         }])
     })()
 </script>

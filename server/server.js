@@ -41,9 +41,22 @@ app.set('views', __dirname + '/views');
 app.set('trust proxy', 'localhost');
 app.enable('trust proxy');
 
+
+//TODO: Enable token based authentication for the rest API
+//This part need to be inserted before session is used.
+app.get('/controls/api', function(req, res) {
+    res.send(JSON.stringify(app.yml_conf));
+    res.end();
+});
+
+app.post('/controls/api', function(req, res) {
+    console.log(req.body);
+    res.end();
+});
+
 // required for passport
 console.log("Cookie secret: " + process.env.CACHE_COOKIE);
-//app.use(session({ secret: process.env.CACHE_COOKIE })); // session secret
+app.use(session({ secret: process.env.CACHE_COOKIE })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
