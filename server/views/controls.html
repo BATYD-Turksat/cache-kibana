@@ -98,9 +98,10 @@
                 }
 
                 $scope.syncLatestFromServer = function(){
-                    $http.get('http://localhost:8082/api').
+                    $http.get('controls/api').
                             success(function (data) {
                                 $scope.jsonData = data;
+                                $scope.myForm.modified = false;
                                 $scope.nodeOptions.refresh();
                             }).error(function () {
                                 alert("Server error!");

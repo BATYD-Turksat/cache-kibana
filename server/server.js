@@ -24,7 +24,8 @@ mongoose.connect(configDB.url); // connect to our database
 require('./config/passport')(passport); // pass passport for configuration
 
 // attach the yml files to application.
-app.yml_conf = yml.readYML();
+var yml_file_name = 'sample2';
+app.yml_conf = yml.readYML(yml_file_name);
 
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
@@ -43,14 +44,14 @@ app.enable('trust proxy');
 
 
 //TODO: Enable token based authentication for the rest API
-//This part need to be inserted before session is used.
+//This part need to be called before session is enabled.
 app.get('/controls/api', function(req, res) {
     res.send(JSON.stringify(app.yml_conf));
     res.end();
 });
 
 app.post('/controls/api', function(req, res) {
-    console.log(req.body);
+    yml.updateYML(req.body, yml_file_name);
     res.end();
 });
 
