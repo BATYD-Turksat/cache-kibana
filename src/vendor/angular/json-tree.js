@@ -32,8 +32,10 @@
                             ' {{ key }} </div>' +
                             '<div class="control">' +
                             '<div ng-hide="childs[key].isObject()">' +
+                                '<input ng-show="childs[key].type() === \'boolean\'" type="checkbox" ng-model="json[key]" class="form-control" bs-modifiable required/>' +
+                                '<input ng-show="childs[key].type() === \'boolean\'" type="text" ng-model="json[key]" ng-disabled="true" class="form-control" bs-modifiable required/>' +
                                 '<input ng-show="childs[key].type() === \'number\'" type="number" id="json[key]" name="json[key]" ng-model="json[key]" class="form-control" bs-modifiable required/>' +
-                                '<input ng-show="childs[key].type() !== \'number\'" type="text" id="json[key]" name="json[key]" ng-model="json[key]" ng-change="utils.validateNode(key)" placeholder="null" class="form-control" bs-modifiable required/>' +
+                                '<input ng-show="(childs[key].type() !== \'number\') && (childs[key].type() !== \'boolean\')" type="text" id="json[key]" name="json[key]" ng-model="json[key]" ng-change="utils.validateNode(key)" placeholder="null" class="form-control" bs-modifiable required/>' +
                             '</div>' +
                             '</div>' +
                             '<json-tree json="json[key]" collapsed-level="{{+collapsedLevel - 1}}" node="childs[key]" ng-show="childs[key].isObject()"></json-tree>' +
@@ -88,6 +90,15 @@
                             /* try to convert string to number */
                             else if (!isNaN(+$scope.json[key]) && isFinite($scope.json[key]))
                                 $scope.json[key] = +$scope.json[key];
+
+                            /* try to parse string to json */
+                            else {
+                                /* check if boolean input -> then refresh */
+                                if ($scope.json[key] === "true" || $scope.json[key] === "false") {
+                                    $scope.json[key] = JSON.parse($scope.json[key]);
+                                    $scope.refresh();
+                                }
+                            }
                         },
 
                         /* to skip ordering in ng-repeat */
@@ -103,6 +114,7 @@
                             else if (val.constructor === Object) return 'object'
                             else if (val.constructor === String) return 'string'
                             else if (val.constructor === Number) return 'number'
+                            else if (val.constructor === Boolean) return 'boolean'
                             else return 'string'
                         }
                     };
