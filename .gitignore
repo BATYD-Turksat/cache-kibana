@@ -3,5 +3,6 @@ node_modules
 dist
 .DS_Store
 .idea
-/server/yml/*.yml
+/server/yml/*.yml*
+/server/yml/*.meta
 

@@ -12,21 +12,20 @@
         border-style: inset;
         border-width: 1px;
     }
-        .pending-update { background-color: pink }
+    .pending-update { background-color: pink }
 </style>
 <link rel="stylesheet" href="css/form-style.css">
 <div ng-app="myApp">
-    <div ng-controller="myCtrl">
+    <div id="idMyCtrl" ng-controller="myCtrl">
         <div class="container">
             <div class="center-block">
-                <form name="myForm" novalidate>
                     <!-- Buttons -->
                     <div class="form-group">
                         <div class="control buttons">
                             <button
                                     type="submit"
                                     class="btn btn-warning"
-                                    ng-click="updateChanges()"
+                                    ng-click="updateChanges(activeConf)"
                                     ng-disabled="!myForm.modified"
                                     >
                                 Update Changes
@@ -35,23 +34,27 @@
                                     type="button"
                                     class="btn btn-primary"
                                     ng-disabled="!myForm.modified"
-                                    ng-click="syncLatestFromServer()"
+                                    ng-click="syncLatestFromServer(activeConf)"
                                     >
                                 Reset Changes
                             </button>
+                            <div class="btn-group dropdown"> <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">Select Config <span class="caret"></span></a>
+                            </div>
                         </div>
                     </div>
+                    <!-- Buttons End -->
 
-
+                    <!-- Tree View of Conf Data -->
+                    <form name="myForm" novalidate>
                         <div class="row">
                                 <table>
                                     <tr>
-                                        <td><json-tree json="jsonData" node="nodeOptions" edit-level="low" collapsed-level="2"></json-tree></td>
+                                        <td><json-tree json="jsonData" node="nodeOptions" edit-level="low" collapsed-level="3"></json-tree></td>
                                     </tr>
                                 </table>
                         </div>
-
-                </form>
+                    </form>
+                    <!-- Tree View of Conf Data End -->
             </div>
         </div>
     </div>
@@ -66,13 +69,14 @@
         var myApp = angular.module('myApp', ['json-tree', 'ngInputModified']);
 
         myApp.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
+                $scope.activeConf = 0;
 
-                $http.get('controls/api').
+                $http.get('controls/api/0').
                         success(function (data) {
                             $scope.jsonData = data;
                             $scope.nodeOptions.refresh();
                         }).error(function () {
-                            alert("Server error!");
+                            alert("Server error while loading conf file!");
                         });
 
                 // Needed for the first view to be created.
@@ -83,11 +87,10 @@
 
                 $scope.jsonData = defaultData();
 
-                $scope.updateChanges = function(){
+                $scope.updateChanges = function(id){
                     $scope.myForm.$setPristine();
-                    console.log($scope.jsonData);
                     $http({
-                        url: 'controls/api',
+                        url: 'controls/api/' + id,
                         method: "POST",
                         data: JSON.stringify($scope.jsonData),
                         headers: {'Content-Type': 'application/json'}
@@ -97,8 +100,8 @@
                     });
                 }
 
-                $scope.syncLatestFromServer = function(){
-                    $http.get('controls/api').
+                $scope.syncLatestFromServer = function(id){
+                    $http.get('controls/api/' + id).
                             success(function (data) {
                                 $scope.jsonData = data;
                                 $scope.myForm.modified = false;
@@ -108,6 +111,28 @@
                             });
                 }
         }])
-    })()
+    })();
+
+    var conf_items = [];
+    $.getJSON( "controls/api/confs", function( data ) {
+        $.each( data, function( index, val ) {
+            conf_items.push( "<li><a href=\"#\" id=\'" + index + "\'>" + val + "</a></li>" );
+        });
+    });
+
+    jQuery(document).ready(function() {
+        $('.dropdown').on('click','a[data-toggle="dropdown"]',
+                function(){
+                    //if($(this).children().length <= 0){
+                        $(this).after( '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" >' + conf_items.join("") + '</ul>' );
+                        $(this).dropdown();
+                    //}
+                });
+
+        $('.dropdown').on('click', '.dropdown-menu li a', function () {
+            angular.element('#idMyCtrl').scope().activeConf = $(this).attr("id");
+            angular.element('#idMyCtrl').scope().syncLatestFromServer($(this).attr("id"));
+        });
+    });
 </script>
 {% endblock %}
