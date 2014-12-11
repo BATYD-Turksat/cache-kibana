@@ -16,7 +16,6 @@ module.exports.updateYML = function(path, file_id, json_in){
 
     for (var meta in meta_list)
     {
-        console.log ("meta :" + meta_list[meta]);
         if (meta_list[meta] === yml_file) {
             meta_found = true;
             meta_file = yml_file;
