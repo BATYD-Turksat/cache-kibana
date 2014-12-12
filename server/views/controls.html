@@ -38,7 +38,7 @@
                                     >
                                 Reset Changes
                             </button>
-                            <div class="btn-group dropdown"> <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">Select Config <span class="caret"></span></a>
+                            <div class="btn-group dropdown yml-controls"> <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">Select Config <span class="caret"></span></a>
                             </div>
                         </div>
                     </div>
@@ -121,7 +121,7 @@
     });
 
     jQuery(document).ready(function() {
-        $('.dropdown').on('click','a[data-toggle="dropdown"]',
+        $('.dropdown.yml-controls').on('click','a[data-toggle="dropdown"]',
                 function(){
                     //if($(this).children().length <= 0){
                         $(this).after( '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" >' + conf_items.join("") + '</ul>' );
@@ -129,7 +129,7 @@
                     //}
                 });
 
-        $('.dropdown').on('click', '.dropdown-menu li a', function () {
+        $('.dropdown.yml-controls').on('click', '.dropdown-menu li a', function () {
             angular.element('#idMyCtrl').scope().activeConf = $(this).attr("id");
             angular.element('#idMyCtrl').scope().syncLatestFromServer($(this).attr("id"));
         });
