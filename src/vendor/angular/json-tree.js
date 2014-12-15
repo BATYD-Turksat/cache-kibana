@@ -27,8 +27,8 @@
                     '<li ng-repeat="key in utils.keys(json) track by key">' +
                     '<div class="form-group">' +
                             '<div  class="text-primary" class="key" ng-click="utils.clickNode(childs[key])" >' +
-                            '<i ng-show="childs[key].isCollapsed && (childs[key].type() === \'object\' || childs[key].type() === \'array\')" class="icon-plus-sign-alt icon-large" ></i>' +
-                            '<i ng-show="childs[key].isCollapsed === false && (childs[key].type() === \'object\' || childs[key].type() === \'array\')" class="icon-minus-sign-alt icon-large"></i>' +
+                            '<i ng-show="childs[key].isCollapsed && (childs[key].type() === \'object\' || childs[key].type() === \'array\')" class="icon-plus-sign-alt icon-large tree-expand-node" ></i>' +
+                            '<i ng-show="childs[key].isCollapsed === false && (childs[key].type() === \'object\' || childs[key].type() === \'array\')" class="icon-minus-sign-alt icon-large tree-expand-node"></i>' +
                             ' {{ key }} </div>' +
                             '<div class="control">' +
                             '<div ng-hide="childs[key].isObject()">' +

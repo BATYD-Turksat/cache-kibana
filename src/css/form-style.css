@@ -18,12 +18,20 @@ input.ng-invalid {
 
 .form-group {
     margin: 10px;
-    padding: 10px;
-    border: 1px dashed #AAA;
 }
 
 .form-group label {
     color: 000;
     font-size: 13px;
     font-weight: bold;
+}
+
+a.disabled {
+    color: #e67a00;
+    cursor: not-allowed;
+}
+
+.tree-expand-node {
+    cursor: pointer;
+    cursor: hand;
 }
