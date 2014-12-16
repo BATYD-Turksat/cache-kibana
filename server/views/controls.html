@@ -41,12 +41,20 @@
 
 {% block app-content %}
 <style>
-    ul { padding-left:20px; list-style:none; }
-    li { margin-bottom:10px; }
+    .json-tree-span ul { padding-left:20px; list-style:none; }
+    .json-tree-span li { margin-bottom:10px; }
+    .json-tree-span {
+        height: 700px !important;
+        width: 700px !important;
+        overflow: auto;
+        background-color: rgba(101, 101, 101, 0.90);
+    }
 </style>
 <link rel="stylesheet" href="css/form-style.css">
-        <div class="container">
-            <div class="center-block">
+<div class="modal-body">
+    <div class="container">
+        <div class="span1"></div>
+        <div class="span10 json-tree-span">
                     <!-- Tree View of Conf Data -->
                     <form name="myForm" novalidate>
                         <div class="row">
@@ -58,10 +66,12 @@
                         </div>
                     </form>
                     <!-- Tree View of Conf Data End -->
-            </div>
         </div>
+        <div class="span1"></div>
+    </div>
+</div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+<script src="vendor/angular/angular-1.2.16.min.js"></script>
 <script src="vendor/angular/json-tree.js"></script>
 <script src="vendor/angular/angular-input-modified.js"></script>
 <script>
