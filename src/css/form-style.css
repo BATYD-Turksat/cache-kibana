@@ -34,5 +34,5 @@ a.disabled {
 .tree-expand-node {
     cursor: pointer;
     cursor: hand;
-    border-bottom-color: red !important;
+    background-color: red;
 }

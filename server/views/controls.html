@@ -51,6 +51,8 @@
     }
 </style>
 <link rel="stylesheet" href="css/form-style.css">
+<link rel="stylesheet" href="css/angular-busy.css">
+<div cg-busy="myPromise"></div>
 <div class="modal-body">
     <div class="container">
         <div class="span1"></div>
@@ -74,10 +76,11 @@
 <script src="vendor/angular/angular-1.2.16.min.js"></script>
 <script src="vendor/angular/json-tree.js"></script>
 <script src="vendor/angular/angular-input-modified.js"></script>
+<script src="vendor/angular/angular-busy.js"></script>
 <script>
     (function(){
 
-        var myApp = angular.module('myApp', ['json-tree', 'ngInputModified']);
+        var myApp = angular.module('myApp', ['json-tree', 'ngInputModified', 'cgBusy']);
         myApp.directive('aDisabled', function() {
             return {
                 compile: function(tElement, tAttrs, transclude) {
@@ -105,7 +108,7 @@
         myApp.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
                 $scope.activeConf = 0;
 
-                $http.get('controls/api/0').
+                    $scope.myPromise = $http.get('controls/api/0').
                         success(function (data) {
                             $scope.jsonData = data;
                             $scope.nodeOptions.refresh();
@@ -123,7 +126,7 @@
 
                 $scope.updateChanges = function(id){
                     $scope.myForm.$setPristine();
-                    $http({
+                    $scope.myPromise = $http({
                         url: 'controls/api/' + id,
                         method: "POST",
                         data: JSON.stringify($scope.jsonData),
@@ -135,7 +138,7 @@
                 }
 
                 $scope.syncLatestFromServer = function(id){
-                    $http.get('controls/api/' + id).
+                    $scope.myPromise = $http.get('controls/api/' + id).
                             success(function (data) {
                                 $scope.jsonData = data;
                                 $scope.myForm.modified = false;
@@ -147,6 +150,7 @@
         }])
     })();
 
+    // Load the conf item list from server.
     var conf_items = [];
     $.getJSON( "controls/api/confs", function( data ) {
         $.each( data, function( index, val ) {
@@ -155,6 +159,7 @@
     });
 
     jQuery(document).ready(function() {
+        // Generate the dropdown for the list of control files.
         $('.dropdown.yml-controls').on('click','a[data-toggle="dropdown"]',
                 function(){
                     //if($(this).children().length <= 0){
@@ -163,11 +168,13 @@
                     //}
                 });
 
+        // Make angular call for the selected control file.
         $('.dropdown.yml-controls').on('click', '.dropdown-menu li a', function () {
             angular.element('#idMyCtrl').scope().activeConf = $(this).attr("id");
             angular.element('#idMyCtrl').scope().syncLatestFromServer($(this).attr("id"));
         });
 
+        // Help texts for control buttons
         $(".loadConfigButton").attr('title', 'Load config');
         $(".saveConfigButton").attr('title', 'Save config');
         $(".resetConfigButton").attr('title', 'Reset config');
