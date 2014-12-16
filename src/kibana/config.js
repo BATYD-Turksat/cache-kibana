@@ -1,1 +1,1 @@
-/home/saltuka/Git/cache-kibana/src/config.js
+../config.js
