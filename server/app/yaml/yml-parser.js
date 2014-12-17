@@ -1,5 +1,6 @@
-yaml  = require('js-yaml'); //used for parsing YML files
-yaml2 = require('rsa-yamljs'); //used for converting JSON back to YML.
+yaml  = require('js-yaml');    //parsing YML files
+yaml2 = require('rsa-yamljs'); //converting JSON back to YML.
+myml  = require('meta-yaml');  //generate meta json for double quotes.
 fs    = require('fs');
 
 var yml_confs = [];
@@ -7,29 +8,13 @@ var meta_confs = [];
 
 module.exports.updateYML = function(path, file_id, json_in){
     var yml_list = this.getYMLConfList();
-    var meta_list = this.getMetaConfList();
     var yml_file = yml_list[file_id];
 
-    var meta_found = false;
-    var meta_id = 0;
-    var meta_file = "";
+    console.log(meta_confs[file_id][yml_file]);
 
-    for (var meta in meta_list)
-    {
-        if (meta_list[meta] === yml_file) {
-            meta_found = true;
-            meta_file = yml_file;
-            meta_id = meta;
-        }
-    }
+    yml_out = yaml2.dump(json_in[yml_file], null, null, null, null, meta_confs[file_id][yml_file]);
 
-    if (meta_found) {
-        yml_out = yaml2.dump(json_in[yml_file], null, null, null, null, meta_confs[meta_id][meta_file]);
-    } else {
-        yml_out = yaml2.dump(json_in[yml_file]);
-    }
-
-    fs.writeFile(path + '/' + yml_file + '.yml', '---\n' + yml_out , function(err) {
+    fs.writeFile(path + '/' + yml_file, '---\n' + yml_out , function(err) {
         if(err) {
             console.log(err);
         } else {
@@ -40,19 +25,14 @@ module.exports.updateYML = function(path, file_id, json_in){
 
 module.exports.readAllYML = function (path) {
     var files = fs.readdirSync(path);
-    var extension=/\.[0-9a-z]+$/i;
     for (var file in files){
         try {
             var json_out = {};
-            if (files[file].match(extension)[0] === '.yml') {
-                var key = files[file].substr(0, files[file].lastIndexOf('.'));
-                json_out[key] = yaml.safeLoad(fs.readFileSync(path + '//'  + files[file], 'utf8'));
-                yml_confs.push(json_out);
-            } else if (files[file].match(extension)[0] === '.meta') {
-                var key = files[file].substr(0, files[file].lastIndexOf('.'));
-                json_out[key] = yaml.safeLoad(fs.readFileSync(path + '//'  + files[file], 'utf8'));
-                meta_confs.push(json_out);
-            }
+            json_out[files[file]] = yaml.safeLoad(fs.readFileSync(path + '//'  + files[file], 'utf8'));
+            yml_confs.push(json_out);
+            var meta_out = {};
+            meta_out[files[file]] = myml.parse(fs.readFileSync(path + '//'  + files[file], 'utf8'));
+            meta_confs.push(meta_out);
         } catch (err) {
             console.log(files[file] + ' has error :' + err);
         }
@@ -73,8 +53,4 @@ function extractFileNames(file_list) {
 
 module.exports.getYMLConfList = function(){
     return extractFileNames(yml_confs);
-};
-
-module.exports.getMetaConfList = function(){
-    return extractFileNames(meta_confs);
 };
