@@ -16,6 +16,7 @@
     "swig": "~1.4.2",
     "rsa-yamljs": "~0.2.1",
     "js-yaml": "~3.2.3",
-    "meta-yaml": "~0.1.0"
+    "meta-yaml": "~0.1.1",
+    "lodash": "~2.4.1"
   }
 }
