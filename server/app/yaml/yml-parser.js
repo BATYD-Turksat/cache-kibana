@@ -81,7 +81,7 @@ module.exports.readAllYML = function (path) {
         yml_conf_list = extractFileNames(yml_confs);
         meta_conf_list = extractFileNames(meta_confs);
 
-        // Conf and meta list should always be identical. If not there is a problem am I not aware of.
+        // Conf and meta list should always be identical. If not there is a problem I am not aware of.
         if (_.isEqual(yml_conf_list, meta_conf_list) == false) {
             console.log("Meta list: " + meta_conf_list);
             console.log("Conf list: " + yml_conf_list);

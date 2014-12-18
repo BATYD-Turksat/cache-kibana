@@ -44,8 +44,8 @@
     .json-tree-span ul { padding-left:20px; list-style:none; }
     .json-tree-span li { margin-bottom:10px; }
     .json-tree-span {
-        height: 700px !important;
-        width: 700px !important;
+        height: 650px !important;
+        width: 750px !important;
         overflow: auto;
         background-color: rgba(101, 101, 101, 0.90);
     }
@@ -113,7 +113,8 @@
                             $scope.jsonData = data;
                             $scope.nodeOptions.refresh();
                         }).error(function () {
-                            alert("Server error while loading conf file!");
+                            bootbox.alert("Server error while loading conf file!", function() {
+                            });
                         });
 
                 // Needed for the first view to be created.
@@ -133,7 +134,8 @@
                         headers: {'Content-Type': 'application/json'}
                     }).success(function (data, status, headers, config) {
                     }).error(function (data, status, headers, config) {
-                        alert("Server error!");
+                        bootbox.alert("Server error while sending conf file!", function() {
+                        });
                     });
                 }
 
@@ -144,7 +146,8 @@
                                 $scope.myForm.modified = false;
                                 $scope.nodeOptions.refresh();
                             }).error(function () {
-                                alert("Server error!");
+                                bootbox.alert("Server error while loading conf file!", function() {
+                                });
                             });
                 }
         }])
@@ -170,13 +173,13 @@
                         sub_folder_entered = true;
                     }
 
-                    conf_items.push( "<li><a href=\"#\" id=\'" + index + "\'>" + arr[arr.length - 1] + "</a></li>" );
+                    conf_items.push( '<li><a href="#" class="myMenuClick" id=' + index + '>' + arr[arr.length - 1] + '</a></li>' );
                 } else {
                     if (sub_folder_entered) {
                         conf_items.push('</ul></li>');
                         sub_folder_entered = false;
                     }
-                    conf_items.push( "<li><a href=\"#\" id=\'" + index + "\'>" + val + "</a></li>" );
+                    conf_items.push( '<li><a href="#" class="myMenuClick" id=' + index + '>' + val + '</a></li>' );
                 }
 
             });
@@ -196,7 +199,7 @@
                 });
 
         // Make angular call for the selected control file.
-        $('.dropdown.yml-controls').on('click', '.dropdown-menu li a', function () {
+        $('.dropdown.yml-controls').on('click', '.myMenuClick', function () {
             angular.element('#idMyCtrl').scope().activeConf = $(this).attr("id");
             angular.element('#idMyCtrl').scope().syncLatestFromServer($(this).attr("id"));
         });
