@@ -44,7 +44,7 @@ function extractFileNames(file_list) {
     return files_out;
 }
 
-module.exports.updateYML = function(file_id, json_in){
+module.exports.updateYML = function(file_id, json_in, callback){
     var yml_list = this.getYMLConfList();
     var yml_file = yml_list[file_id];
     yml_confs[file_id][yml_file] = _.clone(json_in[yml_file]);
@@ -55,6 +55,7 @@ module.exports.updateYML = function(file_id, json_in){
             console.log(err);
         } else {
             console.log("The file was saved!");
+            callback();
         }
     });
 };

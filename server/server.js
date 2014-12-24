@@ -8,6 +8,8 @@ var port     = process.env.PORT || 8081;
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash    = require('connect-flash');
+var util     = require('util');
+var exec     = require('child_process').exec;
 
 var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -15,6 +17,7 @@ var bodyParser   = require('body-parser');
 var session      = require('express-session');
 var swig         = require('swig');
 var configDB     = require('./config/database');
+var configYML    = require('./config/yml');
 var yml          = require('./app/yaml/yml-parser');
 
 
@@ -56,8 +59,16 @@ app.get('/controls/api/:id', function(req, res) {
 });
 
 app.post('/controls/api/:id', function(req, res) {
-    yml.updateYML(req.params.id, req.body);
-    res.end();
+    yml.updateYML(req.params.id, req.body, function() {
+    var child = exec(configYML.command,
+        function (error, stdout, stderr) {
+            if (error !== null) {
+                console.log('exec error: ' + error);
+            }
+            res.send("Server Says:<br><br>" + stdout + "<br>" + stderr);
+            res.end();
+        });
+    });
 });
 
 // required for passport

@@ -133,6 +133,7 @@
                         data: JSON.stringify($scope.jsonData),
                         headers: {'Content-Type': 'application/json'}
                     }).success(function (data, status, headers, config) {
+                        bootbox.alert(data.replace(/\n/g,"<br>"));
                     }).error(function (data, status, headers, config) {
                         bootbox.alert("Server error while sending conf file!", function() {
                         });
