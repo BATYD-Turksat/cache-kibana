@@ -126,13 +126,13 @@
                 $scope.jsonData = defaultData();
 
                 $scope.updateChanges = function(id){
-                    $scope.myForm.$setPristine();
                     $scope.myPromise = $http({
                         url: 'controls/api/' + id,
                         method: "POST",
                         data: JSON.stringify($scope.jsonData),
                         headers: {'Content-Type': 'application/json'}
                     }).success(function (data, status, headers, config) {
+                        $scope.myForm.$setPristine();
                         bootbox.alert(data.replace(/\n/g,"<br>"));
                     }).error(function (data, status, headers, config) {
                         bootbox.alert("Server error while sending conf file!", function() {
