@@ -60,7 +60,7 @@ app.get('/controls/api/:id', function(req, res) {
 
 app.post('/controls/api/:id', function(req, res) {
     yml.updateYML(req.params.id, req.body, function() {
-    var child = exec(configYML.command,
+    var child = exec(configYML.command_base + ' ' + configYML.command_params,
         function (error, stdout, stderr) {
             if (error !== null) {
                 console.log('exec error: ' + error);
