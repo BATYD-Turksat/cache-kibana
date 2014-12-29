@@ -13,7 +13,10 @@ var meta_path = '';
 function walk(dir, done) {
     var results = [];
     fs.readdir(dir, function(err, list) {
-        if (err) return done(err);
+        if (err) {
+            console.log(err);
+            return done(err);
+        }
         var i = 0;
         (function next() {
             var file = list[i++];
