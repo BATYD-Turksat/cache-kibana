@@ -13,6 +13,8 @@ fi
 # NodeJs
 apt-get -y install nodejs
 apt-get -y install npm
+ln -s /usr/bin/nodejs /usr/bin/node
+
 # Nginx
 apt-get -y install nginx
 # Haproxy
@@ -73,12 +75,12 @@ cd ./ssl/
 popd
 
 # Restart all
-stop xuser
-stop mongodb
+stop node
+stop mongod
 stop nginx
 stop haproxy
 
 start haproxy
 start nginx
-start mongodb
-start xuser
+start mongod
+start node
