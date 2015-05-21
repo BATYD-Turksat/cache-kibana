@@ -15,6 +15,9 @@ var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
+var RedisStore   = require('connect-redis')(session);
+var Redis        = require('ioredis');
+
 var swig         = require('swig');
 var configDB     = require('./config/database');
 var configYML    = require('./config/yml');
@@ -72,8 +75,16 @@ app.post('/controls/api/:id', function(req, res) {
 });
 
 // required for passport
+// redis options
+var options = {sentinels: [{ host: '127.0.0.1', port: 26379 }, { host: '127.0.0.1', port: 26380 },  { host: '127.0.0.1', port: 26381 }],
+    name: 'mymaster'};
+
+// required for passport sessions
+app.use(session({
+    store: new RedisStore({ client: new Redis(options) }),
+    secret: process.env.CACHE_COOKIE
+}));
 console.log("Cookie secret: " + process.env.CACHE_COOKIE);
-app.use(session({ secret: process.env.CACHE_COOKIE })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
