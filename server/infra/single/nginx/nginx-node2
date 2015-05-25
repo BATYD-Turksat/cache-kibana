@@ -6,6 +6,6 @@ server {
 	server_name localhost;
 
 	location / {
-        root /var/www/kibana3/src;
+        root #AUTO_REPLACE_PR_PATH/public;
 	}
 }
