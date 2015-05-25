@@ -48,7 +48,7 @@
                     },
                     "auto_int": true,
                     "resolution": 100,
-                    "interval": "5m",
+                    "interval": "1h",
                     "intervals": [
                         "auto",
                         "1s",
@@ -82,8 +82,7 @@
                         "value_type": "individual",
                         "query_as_alias": true
                     },
-                    "title": "LOAD",
-                    "error": "FacetPhaseExecutionException[Facet [0_0]: (value) field [min5] not found]"
+                    "title": "LOAD"
                 },
                 {
                     "span": 6,
@@ -190,7 +189,7 @@
                     },
                     "auto_int": true,
                     "resolution": 100,
-                    "interval": "5m",
+                    "interval": "1h",
                     "intervals": [
                         "auto",
                         "1s",
@@ -224,8 +223,7 @@
                         "value_type": "individual",
                         "query_as_alias": true
                     },
-                    "title": "Network IN",
-                    "error": "FacetPhaseExecutionException[Facet [0_1]: (value) field [rx_drp] not found]"
+                    "title": "Network IN"
                 }
             ],
             "notice": false
@@ -292,7 +290,7 @@
                     },
                     "auto_int": true,
                     "resolution": 100,
-                    "interval": "5m",
+                    "interval": "1h",
                     "intervals": [
                         "auto",
                         "1s",
@@ -326,8 +324,7 @@
                         "value_type": "individual",
                         "query_as_alias": true
                     },
-                    "title": "CACHE DISK METRICS",
-                    "error": "FacetPhaseExecutionException[Facet [0_2]: (value) field [read] not found]"
+                    "title": "CACHE DISK METRICS"
                 },
                 {
                     "span": 6,
@@ -434,7 +431,7 @@
                     },
                     "auto_int": true,
                     "resolution": 100,
-                    "interval": "5m",
+                    "interval": "1h",
                     "intervals": [
                         "auto",
                         "1s",
@@ -468,8 +465,7 @@
                         "value_type": "cumulative",
                         "query_as_alias": true
                     },
-                    "title": "Network OUT",
-                    "error": "FacetPhaseExecutionException[Facet [0_4]: (value) field [rx_drp] not found]"
+                    "title": "Network OUT"
                 }
             ],
             "notice": false
@@ -568,7 +564,7 @@
                     },
                     "auto_int": true,
                     "resolution": 100,
-                    "interval": "5m",
+                    "interval": "1h",
                     "intervals": [
                         "auto",
                         "1s",
@@ -602,8 +598,7 @@
                         "value_type": "cumulative",
                         "query_as_alias": true
                     },
-                    "title": "MEMORY",
-                    "error": "FacetPhaseExecutionException[Facet [0_3]: (value) field [buffers] not found]"
+                    "title": "MEMORY"
                 }
             ],
             "notice": false
@@ -628,7 +623,7 @@
                     "pin": false,
                     "type": "lucene",
                     "enable": true,
-                    "query": "_type:\"network_metric\" AND host:\"atsank\""
+                    "query": "_type:\"network_metric\" AND host:\"atsank\" AND interface_name:\"eth0\""
                 },
                 "2": {
                     "id": 2,
@@ -637,7 +632,7 @@
                     "pin": false,
                     "type": "lucene",
                     "enable": true,
-                    "query": "_type:\"disk_metric\" AND host:\"atsank\" AND interface_name:\"eth0\""
+                    "query": "_type:\"disk_metric\" AND host:\"atsank\""
                 },
                 "3": {
                     "id": 3,
@@ -655,7 +650,7 @@
                     "pin": false,
                     "type": "lucene",
                     "enable": true,
-                    "query": "*_type:\"disk_metric\" AND host:\"atsank\" AND interface_name:\"eth1\""
+                    "query": "_type:\"network_metric\" AND host:\"atsank\" AND interface_name:\"eth1\""
                 }
             },
             "ids": [
@@ -671,7 +666,7 @@
                 "0": {
                     "type": "time",
                     "field": "@timestamp",
-                    "from": "now-12h",
+                    "from": "now-7d",
                     "to": "now",
                     "mandate": "must",
                     "active": true,
@@ -704,16 +699,16 @@
             "query": "*",
             "pinned": true,
             "history": [
+                "_type:\"network_metric\"AND host:\"atsank\" AND interface_name:\"eth1\"",
                 "_type:\"ram_metric\" AND host:\"atsank\"",
                 "_type:\"disk_metric\" AND host:\"atsank\"",
-                "_type:\"network_metric\" AND host:\"atsank\"",
+                "_type:\"network_metric\" AND host:\"atsank\" AND interface_name:\"eth0\"",
                 "_type:\"load_metric\" AND host:\"atsank\"",
+                "_type:\"network_metric\" AND host:\"atsank\"",
                 "_type:\"ats_metric\" AND host:\"atsank\"",
                 "plugin:\"load\" AND host:\"atsproxy.atsproxy\"",
                 "host:\"atsproxy.atsproxy\" AND plugin:\"interface\" AND plugin_instance:\"eth5\" AND collectd_type:\"if_octets\"",
-                "host:\"atsproxy.atsproxy\" AND plugin:\"interface\" AND plugin_instance:\"eth11\" AND collectd_type:\"if_octets\"",
-                "_type:\"ats_stats\"",
-                "host:\"atsproxy.atsproxy\" AND plugin:\"disk\" AND plugin_instance:\"sda5\" AND collectd_type:\"disk_octets\""
+                "host:\"atsproxy.atsproxy\" AND plugin:\"interface\" AND plugin_instance:\"eth11\" AND collectd_type:\"if_octets\""
             ],
             "remember": 10
         },
