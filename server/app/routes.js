@@ -16,7 +16,7 @@ var User       = require('./models/user');
             } else {
                 res.cookie('user-role', 'operator', { maxAge: 2592000000 });
             }
-            res.redirect('/kibana/#/dashboard/file/performance.json');
+            res.redirect('/kibana/#/dashboard/file/performance_ats1.json');
         } else {
             res.clearCookie('user-name');
             res.clearCookie('user-role');
