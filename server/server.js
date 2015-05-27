@@ -23,6 +23,9 @@ var configDB     = require('./config/database');
 var configYML    = require('./config/yml');
 var yml          = require('./app/yaml/yml-parser');
 
+// Elastic search
+var esConf       = require('./config/elasticsearch');
+var cfgESProxy   = require('./app/es_proxy').configureESProxy;
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
@@ -43,6 +46,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
+
+// Elasticsearch node proxy setup
+console.log("host");
+console.log(esConf.es_host);
+cfgESProxy(app, esConf.es_host, esConf.secure, esConf.es_port,
+    esConf.es_username, esConf.es_password, esConf.others);
 
 // TODO: Need to check if it has any side-effect
 app.set('trust proxy', 'localhost');
