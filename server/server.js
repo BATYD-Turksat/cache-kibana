@@ -45,10 +45,12 @@ cfgESProxy(app, esConf.es_host, esConf.secure, esConf.es_port,
     esConf.es_username, esConf.es_password, esConf.others);
 var apiProxy = httpProxy.createProxyServer();
 
+console.log("dsldksl");
+console.log(esConf.es_host + ':' + esConf.es_port);
 
 app.post("/*/_search", function(req, res){
   console.log("New proxy for _search");
-  apiProxy.web(req, res, { target: 'http://10.237.50.170:9200' });
+  apiProxy.web(req, res, { target: 'http://' + esConf.es_host +  ':' + esConf.es_port });
 });
 
 
@@ -124,34 +126,48 @@ app.use("/kibana", function(req, res, next) {
 
 
 app.get("/*/_mapping", function(req, res){
-  console.log("New proxy for _mapping");
-  apiProxy.web(req, res, { target: 'http://10.237.50.170:9200' });
+    if (req.isAuthenticated()) {
+        apiProxy.web(req, res, { target: 'http://' + esConf.es_host + ':' + esConf.es_port });
+    } else {
+        res.redirect('/login');
+    }
 });
 
 
 app.get("/*/_aliases", function(req, res){
-  console.log("New proxy for _aliases");
-  apiProxy.web(req, res, { target: 'http://10.237.50.170:9200' });
+    if (req.isAuthenticated()) {
+        apiProxy.web(req, res, { target: 'http://' + esConf.es_host + ':' + esConf.es_port });
+    } else {
+        res.redirect('/login');
+    }
 });
 
 
 app.get("/_nodes", function(req, res){
-  console.log("New proxy for _nodes");
-  apiProxy.web(req, res, { target: 'http://10.237.50.170:9200' });
+    if (req.isAuthenticated()) {
+        apiProxy.web(req, res, { target: 'http://' + esConf.es_host + ':' + esConf.es_port });
+    } else {
+        res.redirect('/login');
+    }
 });
 
 
 app.get("/_plugin", function(req, res){
-  console.log("New proxy for _plugin");
-  apiProxy.web(req, res, { target: 'http://10.237.50.170:9200' });
+    if (req.isAuthenticated()) {
+        apiProxy.web(req, res, { target: 'http://' + esConf.es_host + ':' + esConf.es_port });
+    } else {
+        res.redirect('/login');
+    }
 });
 
 
 app.get("/__es", function(req, res){
-  console.log("New proxy for __es");
-  apiProxy.web(req, res, { target: 'http://10.237.50.170:9200' });
+    if (req.isAuthenticated()) {
+        apiProxy.web(req, res, { target: 'http://' + esConf.es_host + ':' + esConf.es_port });
+    } else {
+        res.redirect('/login');
+    }
 });
-
 
 // 404  routes ===================================================
  app.use(function(req, res, next){
