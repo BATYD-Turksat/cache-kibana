@@ -26,6 +26,7 @@ var yml          = require('./app/yaml/yml-parser');
 // Elastic search
 var esConf       = require('./config/elasticsearch');
 var cfgESProxy   = require('./app/es_proxy').configureESProxy;
+var httpProxy    = require('http-proxy');
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
@@ -35,6 +36,21 @@ require('./config/passport')(passport); // pass passport for configuration
 // attach the yml files to application.
 var yml_path = './yml';
 yml.readAllYML(yml_path);
+
+
+// Elasticsearch node proxy setup
+console.log("host");
+console.log(esConf.es_host);
+cfgESProxy(app, esConf.es_host, esConf.secure, esConf.es_port,
+    esConf.es_username, esConf.es_password, esConf.others);
+var apiProxy = httpProxy.createProxyServer();
+
+
+app.post("/*/_search", function(req, res){
+  console.log("New proxy for _search");
+  apiProxy.web(req, res, { target: 'http://10.237.50.170:9200' });
+});
+
 
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
@@ -46,12 +62,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
-
-// Elasticsearch node proxy setup
-console.log("host");
-console.log(esConf.es_host);
-cfgESProxy(app, esConf.es_host, esConf.secure, esConf.es_port,
-    esConf.es_username, esConf.es_password, esConf.others);
 
 // TODO: Need to check if it has any side-effect
 app.set('trust proxy', 'localhost');
@@ -111,6 +121,37 @@ app.use("/kibana", function(req, res, next) {
         res.redirect('/login');
     }
 });
+
+
+app.get("/*/_mapping", function(req, res){
+  console.log("New proxy for _mapping");
+  apiProxy.web(req, res, { target: 'http://10.237.50.170:9200' });
+});
+
+
+app.get("/*/_aliases", function(req, res){
+  console.log("New proxy for _aliases");
+  apiProxy.web(req, res, { target: 'http://10.237.50.170:9200' });
+});
+
+
+app.get("/_nodes", function(req, res){
+  console.log("New proxy for _nodes");
+  apiProxy.web(req, res, { target: 'http://10.237.50.170:9200' });
+});
+
+
+app.get("/_plugin", function(req, res){
+  console.log("New proxy for _plugin");
+  apiProxy.web(req, res, { target: 'http://10.237.50.170:9200' });
+});
+
+
+app.get("/__es", function(req, res){
+  console.log("New proxy for __es");
+  apiProxy.web(req, res, { target: 'http://10.237.50.170:9200' });
+});
+
 
 // 404  routes ===================================================
  app.use(function(req, res, next){
