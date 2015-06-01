@@ -1,5 +1,6 @@
 module.exports = function(app, passport) {
 var User       = require('./models/userModel');
+var Token      = require('./models/tokenModel');
 
 // normal routes ===============================================================
 
@@ -7,6 +8,14 @@ var User       = require('./models/userModel');
 	app.get('/', function(req, res) {
         if (req.isAuthenticated()) {
             var user = req.user;
+
+            // Create web token
+            Token.createToken(user.local.email, function(err, token){
+                if (err) {
+                    console.log(err);
+                }
+            });
+
             res.cookie('user-name', user.local.email, { maxAge: 2592000000 });
 
             if (user.local.role == 'admin'){
@@ -26,6 +35,11 @@ var User       = require('./models/userModel');
 
 	// LOGOUT ==============================
 	app.get('/logout', function(req, res) {
+        Token.invalidateToken(req.user.local.email, function(err, token){
+            if (err) {
+                console.log(err);
+            }
+        });
 		req.logout();
 		res.redirect('/');
 	});
@@ -200,5 +214,67 @@ var User       = require('./models/userModel');
         } else {
             res.redirect('/');
         }
+    });
+
+    // =============================================================================
+    // Token API                                                       =============
+    // =============================================================================
+
+    // Authenticates with the session cookie. This api should be called after login
+    // in a web applications.
+    app.get('/api/token/generate', function(req, res) {
+        if (req.isAuthenticated()) {
+            console.log("This is the e-mail: " + req.user.local.email);
+            Token.createToken(req.user.local.email, function (err, token) {
+                if (err) {
+                    console.log(err);
+                    res.json({error: err});
+                } else {
+                    res.json({
+                        email: token.email,
+                        token: token.token
+                    });
+                }
+            });
+        } else {
+            res.json({error: "You need to login first"});
+        }
+    });
+
+    app.get('/api/token/invalidate', function(req, res) {
+        if (req.isAuthenticated()) {
+            Token.invalidateToken(req.user.local.email, function (err, token) {
+                if (err) {
+                    console.log(err);
+                    res.json({error: err});
+                } else {
+                    res.json({
+                        email: token.email,
+                        token: token.token
+                    });
+                }
+            });
+        } else {
+            res.json({error: "You need to login first"});
+        }
+    });
+
+    app.get('/api/token/test', function(req, res) {
+        console.log(req);
+        var incomingToken = req.headers.token;
+        console.log('incomingToken: ' + incomingToken);
+        Token.findUserByToken(incomingToken, function (err, user) {
+            if (err) {
+                console.log(err);
+                res.json({error: err});
+            } else {
+                res.json({
+                    log: {
+                        user: user,
+                        message: "This is just a simulation of an API endpoint"
+                    }
+                });
+            }
+        });
     });
 };
