@@ -31,7 +31,7 @@ var httpProxy    = require('http-proxy');
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
 
-require('./config/passport')(passport); // pass passport for configuration
+require('./app/mwconf/passport')(passport); // pass passport for configuration
 
 // attach the yml files to application.
 var yml_path = './yml';
