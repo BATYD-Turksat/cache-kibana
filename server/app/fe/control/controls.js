@@ -1,5 +1,3 @@
-tokenStore = require("./token-store.js");
-
 (function(){
 
     var myApp = angular.module('myApp', ['json-tree', 'ngInputModified', 'cgBusy']);
@@ -82,36 +80,45 @@ jQuery(document).ready(function() {
     console.log(token)
     // Load the conf item list from server and generate sub-folders
     var conf_items = [];
-    $.getJSON( "controls/api/confs", function( data ) {
-        var prev_folder = "";
-        var sub_folder_entered = false;
-        $.each( data, function( index, val ) {
-            var arr = val.split('/');
-            if (arr.length > 1){
-                if (prev_folder != arr[0]) {
+    $.ajax({
+        beforeSend: function(request) {
+            request.setRequestHeader("token", token);
+        },
+        type: "GET",
+        cache: false,
+        dataType: "json",
+        url: "controls/api/confs",
+        success: function( data ) {
+            var prev_folder = "";
+            var sub_folder_entered = false;
+            $.each( data, function( index, val ) {
+                var arr = val.split('/');
+                if (arr.length > 1){
+                    if (prev_folder != arr[0]) {
+                        if (sub_folder_entered) {
+                            conf_items.push('</ul></li>');
+                        }
+                        conf_items.push('<li class="dropdown-submenu">');
+                        conf_items.push('<a tabindex="-1" href="#">'+ arr[0] + '</a>');
+                        conf_items.push('<ul class="dropdown-menu">');
+                        prev_folder = arr[0];
+                        sub_folder_entered = true;
+                    }
+
+                    conf_items.push( '<li><a href="#" class="myMenuClick" id=' + index + '>' + arr[arr.length - 1] + '</a></li>' );
+                } else {
                     if (sub_folder_entered) {
                         conf_items.push('</ul></li>');
+                        sub_folder_entered = false;
                     }
-                    conf_items.push('<li class="dropdown-submenu">');
-                    conf_items.push('<a tabindex="-1" href="#">'+ arr[0] + '</a>');
-                    conf_items.push('<ul class="dropdown-menu">');
-                    prev_folder = arr[0];
-                    sub_folder_entered = true;
+                    conf_items.push( '<li><a href="#" class="myMenuClick" id=' + index + '>' + val + '</a></li>' );
                 }
 
-                conf_items.push( '<li><a href="#" class="myMenuClick" id=' + index + '>' + arr[arr.length - 1] + '</a></li>' );
-            } else {
-                if (sub_folder_entered) {
-                    conf_items.push('</ul></li>');
-                    sub_folder_entered = false;
-                }
-                conf_items.push( '<li><a href="#" class="myMenuClick" id=' + index + '>' + val + '</a></li>' );
+            });
+            if (sub_folder_entered) {
+                conf_items.push('</ul></li>');
+                sub_folder_entered = false;
             }
-
-        });
-        if (sub_folder_entered) {
-            conf_items.push('</ul></li>');
-            sub_folder_entered = false;
         }
     });
 

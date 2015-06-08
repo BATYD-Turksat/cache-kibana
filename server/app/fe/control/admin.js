@@ -1,5 +1,3 @@
-tokenStore = require("./token-store.js");
-
 jQuery(document).ready(function() {
     $(document).on("click", ".deleteUser", function () {
         var userId = $(this).data('id');
