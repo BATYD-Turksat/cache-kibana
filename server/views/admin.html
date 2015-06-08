@@ -61,23 +61,6 @@ color: #33b5e5;
 </section>
 </section>
 
-<script>
-    $(document).on("click", ".deleteUser", function () {
-        var userId = $(this).data('id');
-        console.log(userId);
-        $(".modal-body #userId").text( userId );
-        $(".modal-footer #userId").attr("href", "/delete/user/" + userId);
-    });
-
-    $(document).on("click", ".registerUser", function() {
-        $('#registerform')[0].reset();
-    });
-    $( document ).ready( function() {
-                $(".registerUser").attr('title', 'Add user');
-            }
-    );
-</script>
-
 <div class="modal hide fade" id="deleteUser">
     <div class="modal-header">
         <button class="close" data-dismiss="modal">×</button>
@@ -132,4 +115,9 @@ color: #33b5e5;
     </div>
 </div>
 </div>
+{% endblock %}
+
+{% block footer-js %}
+{% parent %}
+<script src="kibana/vendor/browserify/build/admin.js"></script>
 {% endblock %}

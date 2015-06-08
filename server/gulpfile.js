@@ -12,9 +12,9 @@ gulp.task('jshint', function () {
 
 // Browserify
 gulp.task('jsbuild', function() {
-    gulp.src('./app/fe/control/token.js')
+    gulp.src('./app/fe/control/*.js')
         .pipe(browserify({
-            insertGlobals : true,
+            insertGlobals : false,
             debug : !gulp.env.production
         }))
         .pipe(gulp.dest('./../src/vendor/browserify/build'))

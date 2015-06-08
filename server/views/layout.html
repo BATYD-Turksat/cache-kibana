@@ -37,9 +37,6 @@
 {% block angular-app-end %}{% endblock %}
 </body>
 
-<script>
-    setTimeout(function() {
-        $('.alert-danger').fadeOut('slow');
-    }, 1500);
-</script>
+{% block footer-js %}
+{% endblock %}
 </html>
