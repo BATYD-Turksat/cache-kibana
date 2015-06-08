@@ -22,6 +22,7 @@ var swig         = require('swig');
 var configDB     = require('./config/database');
 var configYML    = require('./config/yml');
 var yml          = require('./app/yaml/yml-parser');
+var Token        = require('./app/models/tokenModel');
 
 // Elastic search
 var esConf       = require('./config/elasticsearch');
@@ -44,15 +45,12 @@ console.log(esConf.es_host);
 cfgESProxy(app, esConf.es_host, esConf.secure, esConf.es_port,
     esConf.es_username, esConf.es_password, esConf.others);
 var apiProxy = httpProxy.createProxyServer();
-
-console.log("dsldksl");
 console.log(esConf.es_host + ':' + esConf.es_port);
 
 app.post("/*/_search", function(req, res){
   console.log("New proxy for _search");
   apiProxy.web(req, res, { target: 'http://' + esConf.es_host +  ':' + esConf.es_port });
 });
-
 
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
@@ -69,12 +67,31 @@ app.set('views', __dirname + '/views');
 app.set('trust proxy', 'localhost');
 app.enable('trust proxy');
 
-
-//TODO: Enable token based authentication for the rest API
 //This part need to be called before session is enabled.
 app.get('/controls/api/confs', function(req,res) {
-    res.send(JSON.stringify(yml.getYMLConfList()));
-    res.end();
+    var incomingToken = req.headers.token;
+    console.log('incomingToken: ' + incomingToken + ' for /controls/api/confs');
+    if (incomingToken) {
+        Token.findUserByToken(incomingToken, function (err, user) {
+            if (err) {
+                console.log(err);
+                res.json({error: err});
+            }
+
+            if (user) {
+                res.send(JSON.stringify(yml.getYMLConfList()));
+                res.end();
+            } else {
+                console.log("ERROR: Sending null conf list")
+                res.send({});
+                res.end();
+            }
+        });
+    } else {
+        console.log("ERROR: Token is not received!")
+        res.send({});
+        res.end();
+    }
 });
 
 app.get('/controls/api/:id', function(req, res) {
@@ -109,6 +126,31 @@ console.log("Cookie secret: " + process.env.CACHE_COOKIE);
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
+
+var resHeaders = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,POST');
+    res.header('Access-Control-Expose-Headers', 'token, status, user');
+
+    if (req.isAuthenticated()) {
+        console.log (req.user.local.email)
+        Token.findTokenByUser(req.user.local.email, function(err, token){
+           if(err || !token){
+               console.log("Res header couldn't find token for user " , req.user.local.email);
+           } else {
+               res.header('token', token.token);
+               res.header('user', token.email);
+               res.header('status', 'login');
+           }
+           next()
+        })
+    } else {
+        next();
+    }
+};
+
+app.use(resHeaders);
+
 
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport

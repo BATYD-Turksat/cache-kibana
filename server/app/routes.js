@@ -8,27 +8,30 @@ var Token      = require('./models/tokenModel');
 	app.get('/', function(req, res) {
         if (req.isAuthenticated()) {
             var user = req.user;
-
-            // Create web token
-            Token.createToken(user.local.email, function(err, token){
+            Token.createToken(req.user.local.email, function(err, token){
                 if (err) {
                     console.log(err);
+                } else {
+                    console.log("Set token to : ", token.token);
+                    res.header('token', token.token);
+                    res.header('user', token.email);
+                    res.header('status', 'login');
+                    res.cookie('user-name', user.local.email, { maxAge: 2592000000 });
+
+                    if (user.local.role == 'admin'){
+                        res.cookie('user-role', 'admin', { maxAge: 2592000000 });
+                    } else if (user.local.role == "developer") {
+                        res.cookie('user-role', 'developer', { maxAge: 2592000000 });
+                    } else {
+                        res.cookie('user-role', 'operator', { maxAge: 2592000000 });
+                    }
+                    res.redirect('/kibana/#/dashboard/file/performance_ats1.json');
                 }
             });
-
-            res.cookie('user-name', user.local.email, { maxAge: 2592000000 });
-
-            if (user.local.role == 'admin'){
-                res.cookie('user-role', 'admin', { maxAge: 2592000000 });
-            } else if (user.local.role == "developer") {
-                res.cookie('user-role', 'developer', { maxAge: 2592000000 });
-            } else {
-                res.cookie('user-role', 'operator', { maxAge: 2592000000 });
-            }
-            res.redirect('/kibana/#/dashboard/file/performance_ats1.json');
         } else {
             res.clearCookie('user-name');
             res.clearCookie('user-role');
+            res.header('status', 'logout');
             res.redirect('/login');
         }
 	});
@@ -38,10 +41,12 @@ var Token      = require('./models/tokenModel');
         Token.invalidateToken(req.user.local.email, function(err, token){
             if (err) {
                 console.log(err);
+            } else {
+                console.log("Token removed!");
+                req.logout();
+                res.redirect('/');
             }
         });
-		req.logout();
-		res.redirect('/');
 	});
 
 // =============================================================================
@@ -260,7 +265,6 @@ var Token      = require('./models/tokenModel');
     });
 
     app.get('/api/token/test', function(req, res) {
-        console.log(req);
         var incomingToken = req.headers.token;
         console.log('incomingToken: ' + incomingToken);
         Token.findUserByToken(incomingToken, function (err, user) {
