@@ -77,7 +77,6 @@ app.get('/controls/api/confs', function(req,res) {
                 console.log(err);
                 res.json({error: err});
             }
-
             if (user) {
                 res.send(JSON.stringify(yml.getYMLConfList()));
                 res.end();
@@ -88,28 +87,68 @@ app.get('/controls/api/confs', function(req,res) {
             }
         });
     } else {
-        console.log("ERROR: Token is not received!")
+        console.log("ERROR: Token is not received!");
         res.send({});
         res.end();
     }
 });
 
 app.get('/controls/api/:id', function(req, res) {
-    res.send(JSON.stringify(yml.getYMLConf(parseInt(req.params.id))));
-    res.end();
+    var incomingToken = req.headers.token;
+    console.log('incomingToken: ' + incomingToken + ' for /controls/api/:id GET');
+    if (incomingToken) {
+        Token.findUserByToken(incomingToken, function (err, user) {
+            if (err) {
+                console.log(err);
+                res.json({error: err});
+            }
+            if (user) {
+                res.send(JSON.stringify(yml.getYMLConf(parseInt(req.params.id))));
+                res.end();
+            } else {
+                console.log("ERROR: Sending null yml list for GET");
+                res.send({});
+                res.end();
+            }
+        });
+    } else {
+        console.log("ERROR: Token is not received!");
+        res.send({});
+        res.end();
+    }
 });
 
 app.post('/controls/api/:id', function(req, res) {
-    yml.updateYML(req.params.id, req.body, function() {
-    var child = exec(configYML.command_base + ' ' + configYML.command_params,
-        function (error, stdout, stderr) {
-            if (error !== null) {
-                console.log('exec error: ' + error);
+    var incomingToken = req.headers.token;
+    console.log('incomingToken: ' + incomingToken + ' for /controls/api/:id POST');
+    if (incomingToken) {
+        Token.findUserByToken(incomingToken, function (err, user) {
+            if (err) {
+                console.log(err);
+                res.json({error: err});
             }
-            res.send("Server Says:<br><br>" + stdout + "<br>" + stderr);
-            res.end();
+            if (user) {
+                yml.updateYML(req.params.id, req.body, function() {
+                    var child = exec(configYML.command_base + ' ' + configYML.command_params,
+                        function (error, stdout, stderr) {
+                            if (error !== null) {
+                                console.log('exec error: ' + error);
+                            }
+                            res.send("Server Says:<br><br>" + stdout + "<br>" + stderr);
+                            res.end();
+                        });
+                });
+            } else {
+                console.log("ERROR: Sending null yml list for POST");
+                res.send({});
+                res.end();
+            }
         });
-    });
+    } else {
+        console.log("ERROR: Token is not received!");
+        res.send({});
+        res.end();
+    }
 });
 
 // required for passport

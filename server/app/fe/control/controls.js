@@ -28,7 +28,8 @@
     myApp.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
         $scope.activeConf = 0;
 
-        $scope.myPromise = $http.get('controls/api/0').
+        $scope.myPromise = $http.get('controls/api/0', {headers: {
+            'token': tokenStore.getToken() }}).
             success(function (data) {
                 $scope.jsonData = data;
                 $scope.nodeOptions.refresh();
@@ -50,7 +51,7 @@
                 url: 'controls/api/' + id,
                 method: "POST",
                 data: JSON.stringify($scope.jsonData),
-                headers: {'Content-Type': 'application/json'}
+                headers: {'Content-Type': 'application/json', 'token': tokenStore.getToken()}
             }).success(function (data, status, headers, config) {
                 $scope.myForm.$setPristine();
                 bootbox.alert(data.replace(/\n/g,"<br>"));
@@ -61,7 +62,8 @@
         }
 
         $scope.syncLatestFromServer = function(id){
-            $scope.myPromise = $http.get('controls/api/' + id).
+            $scope.myPromise = $http.get('controls/api/' + id, {headers: {
+                'token': tokenStore.getToken() }}).
                 success(function (data) {
                     $scope.jsonData = data;
                     $scope.myForm.modified = false;
