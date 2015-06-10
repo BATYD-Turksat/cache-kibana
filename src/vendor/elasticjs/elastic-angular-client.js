@@ -55,29 +55,29 @@ angular.module('elasticjs.service', [])
       },
       post: function (path, data, successcb, errorcb) {
         path = config.server + path;
-        var reqConfig = {url: path, data: data, method: 'POST'};
+        var reqConfig = {url: path, data: data, method: 'POST', headers: {'token': tokenStore.getToken()}};
         return promiseThen($http(angular.extend(reqConfig, config)), successcb, errorcb);
       },
       get: function (path, data, successcb, errorcb) {
         path = config.server + path;
         // no body on get request, data will be request params
-        var reqConfig = {url: path, params: data, method: 'GET'};
+        var reqConfig = {url: path, params: data, method: 'GET', headers: {'token': tokenStore.getToken()}};
         return promiseThen($http(angular.extend(reqConfig, config)), successcb, errorcb);
       },
       put: function (path, data, successcb, errorcb) {
         path = config.server + path;
-        var reqConfig = {url: path, data: data, method: 'PUT'};
+        var reqConfig = {url: path, data: data, method: 'PUT', headers: {'token': tokenStore.getToken()}};
         return promiseThen($http(angular.extend(reqConfig, config)), successcb, errorcb);
       },
       del: function (path, data, successcb, errorcb) {
         path = config.server + path;
-        var reqConfig = {url: path, data: data, method: 'DELETE'};
+        var reqConfig = {url: path, data: data, method: 'DELETE', headers: {'token': tokenStore.getToken()}};
         return promiseThen($http(angular.extend(reqConfig, config)), successcb, errorcb);
       },
       head: function (path, data, successcb, errorcb) {
         path = config.server + path;
         // no body on HEAD request, data will be request params
-        var reqConfig = {url: path, params: data, method: 'HEAD'};
+        var reqConfig = {url: path, params: data, method: 'HEAD', headers: {'token': tokenStore.getToken()}};
         return $http(angular.extend(reqConfig, config))
           .then(function (response) {
           (successcb || angular.noop)(response.headers());

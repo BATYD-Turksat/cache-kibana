@@ -47,9 +47,29 @@ cfgESProxy(app, esConf.es_host, esConf.secure, esConf.es_port,
 var apiProxy = httpProxy.createProxyServer();
 console.log(esConf.es_host + ':' + esConf.es_port);
 
+//This part need to be called before bodyparser is enabled.
 app.post("/*/_search", function(req, res){
-  console.log("New proxy for _search");
-  apiProxy.web(req, res, { target: 'http://' + esConf.es_host +  ':' + esConf.es_port });
+    console.log("New proxy for _search");
+    var incomingToken = req.headers.token;
+    if (incomingToken) {
+        Token.findUserByToken(incomingToken, function (err, user) {
+            if (err) {
+                console.log(err);
+                res.json({error: err});
+            }
+            if (user) {
+                apiProxy.web(req, res, { target: 'http://' + esConf.es_host +  ':' + esConf.es_port });
+            } else {
+                console.log("ERROR: Could not find a valid user for the token");
+                res.send({});
+                res.end();
+            }
+        });
+    } else {
+        console.log("ERROR: Token is not received!");
+        res.send({});
+        res.end();
+    }
 });
 
 // set up our express application
@@ -81,7 +101,7 @@ app.get('/controls/api/confs', function(req,res) {
                 res.send(JSON.stringify(yml.getYMLConfList()));
                 res.end();
             } else {
-                console.log("ERROR: Sending null conf list")
+                console.log("ERROR: Could not find a valid user for the token");
                 res.send({});
                 res.end();
             }
@@ -106,7 +126,7 @@ app.get('/controls/api/:id', function(req, res) {
                 res.send(JSON.stringify(yml.getYMLConf(parseInt(req.params.id))));
                 res.end();
             } else {
-                console.log("ERROR: Sending null yml list for GET");
+                console.log("ERROR: Could not find a valid user for the token")
                 res.send({});
                 res.end();
             }
@@ -172,7 +192,7 @@ var resHeaders = function(req, res, next) {
     res.header('Access-Control-Expose-Headers', 'token, status, user');
 
     if (req.isAuthenticated()) {
-        console.log (req.user.local.email)
+        console.log (req.user.local.email);
         Token.findTokenByUser(req.user.local.email, function(err, token){
            if(err || !token){
                console.log("Res header couldn't find token for user " , req.user.local.email);
