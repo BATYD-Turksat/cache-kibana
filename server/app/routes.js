@@ -86,7 +86,16 @@ var Token      = require('./models/tokenModel');
         });
 
 		// process the signup form
-		app.post('/signup', passport.authenticate('local-signup', {
+		app.post('/signup', function (req, res, next){
+                User.count({}, function( err, count){
+                    if (count != 0) {
+                        res.redirect('/');
+                    } else {
+                        next();
+                    }
+                })
+            },
+            passport.authenticate('local-signup', {
 			successRedirect : '/admin', // redirect to the secure admin section
 			failureRedirect : '/signup', // redirect back to the signup page if there is an error
 			failureFlash : true // allow flash messages
