@@ -608,7 +608,7 @@
         "query": {
             "list": {
                 "0": {
-                    "query": "_type:\"load_metric\" AND host:\"atsank\"",
+                    "query": "_type:\"load_metric\" AND host:\"atsank1\"",
                     "id": 0,
                     "alias": "",
                     "pin": false,
@@ -623,7 +623,7 @@
                     "pin": false,
                     "type": "lucene",
                     "enable": true,
-                    "query": "_type:\"network_metric\" AND host:\"atsank\" AND interface_name:\"eth0\""
+                    "query": "_type:\"network_metric\" AND host:\"atsank1\" AND interface_name:\"p1p1\""
                 },
                 "2": {
                     "id": 2,
@@ -632,7 +632,7 @@
                     "pin": false,
                     "type": "lucene",
                     "enable": true,
-                    "query": "_type:\"disk_metric\" AND host:\"atsank\""
+                    "query": "_type:\"disk_metric\" AND host:\"atsank1\""
                 },
                 "3": {
                     "id": 3,
@@ -641,7 +641,7 @@
                     "pin": false,
                     "type": "lucene",
                     "enable": true,
-                    "query": "_type:\"ram_metric\" AND host:\"atsank\""
+                    "query": "_type:\"ram_metric\" AND host:\"atsank1\""
                 },
                 "4": {
                     "id": 4,
@@ -650,7 +650,7 @@
                     "pin": false,
                     "type": "lucene",
                     "enable": true,
-                    "query": "_type:\"network_metric\" AND host:\"atsank\" AND interface_name:\"eth1\""
+                    "query": "_type:\"network_metric\" AND host:\"atsank1\" AND interface_name:\"p1p2\""
                 }
             },
             "ids": [
@@ -693,22 +693,22 @@
     "pulldowns": [
         {
             "type": "query",
-            "collapse": true,
+            "collapse": false,
             "notice": false,
             "enable": true,
             "query": "*",
             "pinned": true,
             "history": [
-                "_type:\"network_metric\"AND host:\"atsank\" AND interface_name:\"eth1\"",
+                "_type:\"network_metric\" AND host:\"atsank1\" AND interface_name:\"p1p2\"",
+                "_type:\"ram_metric\" AND host:\"atsank1\"",
+                "_type:\"disk_metric\" AND host:\"atsank1\"",
+                "_type:\"network_metric\" AND host:\"atsank1\" AND interface_name:\"p1p1\"",
+                "_type:\"load_metric\" AND host:\"atsank1\"",
+                "_type:\"network_metric\" AND host:\"atsank1\" AND interface_name:\"eth0\"",
+                "_type:\"network_metric\" AND host:\"atsank1\" AND interface_name:\"eth1\"",
+                "_type:\"network_metric\" AND host:\"atsank\" AND interface_name:\"eth1\"",
                 "_type:\"ram_metric\" AND host:\"atsank\"",
-                "_type:\"disk_metric\" AND host:\"atsank\"",
-                "_type:\"network_metric\" AND host:\"atsank\" AND interface_name:\"eth0\"",
-                "_type:\"load_metric\" AND host:\"atsank\"",
-                "_type:\"network_metric\" AND host:\"atsank\"",
-                "_type:\"ats_metric\" AND host:\"atsank\"",
-                "plugin:\"load\" AND host:\"atsproxy.atsproxy\"",
-                "host:\"atsproxy.atsproxy\" AND plugin:\"interface\" AND plugin_instance:\"eth5\" AND collectd_type:\"if_octets\"",
-                "host:\"atsproxy.atsproxy\" AND plugin:\"interface\" AND plugin_instance:\"eth11\" AND collectd_type:\"if_octets\""
+                "_type:\"disk_metric\" AND host:\"atsank\""
             ],
             "remember": 10
         },

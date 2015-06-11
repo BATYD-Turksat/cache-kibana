@@ -191,7 +191,7 @@
                     "pin": false,
                     "type": "lucene",
                     "enable": true,
-                    "query": "_type:\"ats_squid_log\" AND host:\"atsank2\""
+                    "query": "_type:\"ats_log\" AND host:\"atsank2\""
                 }
             },
             "ids": [
@@ -231,22 +231,22 @@
     "pulldowns": [
         {
             "type": "query",
-            "collapse": true,
+            "collapse": false,
             "notice": false,
             "enable": true,
             "query": "*",
             "pinned": true,
             "history": [
-                "_type:\"ats_squid_log\" AND host:\"atsank2\"",
+                "_type:\"ats_log\" AND host:\"atsank2\"",
                 "_type:\"ats_metric\" AND host:\"atsank2\"",
+                "_type:\"ats_squid_log\" AND host:\"atsank2\"",
+                "_type:\"ats_squid_log\" AND host:\"atsank\"",
+                "_type:\"ats_metric\" AND host:\"atsank\"",
                 "@type:\"trafficserver\" AND (squid_content_type:\"video\" OR squid_content_type:\"audio\")",
                 "@message == \"fail\" or @message == \"Fail\" or @message == \"FAIL\"",
                 "@message == \"warn\" or @message == \"Warn\" or @message == \"WARN\"",
                 "@message == \"error\" or @message == \"Error\" or @message == \"ERROR\"",
-                "@message == \"exception\" or @message == \"Exception\" or @message == \"EXCEPTION\"",
-                "host:\"atsproxy.atsproxy\" AND plugin:\"memory\" AND collectd_type:\"memory\" AND type_instance:\"cached\"",
-                "host:\"atsproxy.atsproxy\" AND plugin:\"memory\" AND collectd_type:\"memory\" AND type_instance:\"used\"",
-                "host:\"atsproxy.atsproxy\" AND plugin:\"memory\" AND collectd_type:\"memory\" AND type_instance:\"buffered\""
+                "@message == \"exception\" or @message == \"Exception\" or @message == \"EXCEPTION\""
             ],
             "remember": 10
         },
