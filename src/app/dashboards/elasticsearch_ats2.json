@@ -104,7 +104,7 @@
                     "values": [
                         {
                             "mode": "mean",
-                            "value_field": "indices._all.datastore.size",
+                            "value_field": "indices.datastore.size",
                             "value_text": "Datastore",
                             "scale": 1,
                             "zerofill": true,
@@ -117,7 +117,7 @@
                         },
                         {
                             "mode": "mean",
-                            "value_field": "indices._all.docs.count",
+                            "value_field": "indices.docs.count",
                             "value_text": "Docs count",
                             "scale": 1,
                             "zerofill": true,
@@ -288,15 +288,6 @@
                     "title": "Network"
                 }
             ],
-            "notice": false
-        },
-        {
-            "title": "Logs",
-            "height": "150px",
-            "editable": true,
-            "collapse": false,
-            "collapsable": true,
-            "panels": [],
             "notice": false
         }
     ],
