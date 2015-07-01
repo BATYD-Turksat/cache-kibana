@@ -1,0 +1,254 @@
+{
+    "rows": [
+        {
+            "title": "",
+            "height": "150px",
+            "editable": true,
+            "collapse": false,
+            "collapsable": true,
+            "panels": [
+                {
+                    "span": 12,
+                    "editable": true,
+                    "type": "multifieldhistogram",
+                    "loadingEditor": false,
+                    "values": [
+                        {
+                            "mode": "mean",
+                            "value_field": "TCPAbortOnMemory",
+                            "value_text": "Abort OM",
+                            "scale": 1,
+                            "zerofill": true,
+                            "derivative": false,
+                            "queries": [
+                                4
+                            ],
+                            "color": "#EAB839",
+                            "alias": null
+                        },
+                        {
+                            "mode": "mean",
+                            "value_field": "TCPBacklogDrop",
+                            "value_text": "Backlog Drop",
+                            "scale": 1,
+                            "zerofill": true,
+                            "derivative": false,
+                            "queries": [
+                                4
+                            ],
+                            "color": "#6ED0E0",
+                            "alias": null
+                        },
+                        {
+                            "mode": "mean",
+                            "value_field": "TCPLostRetransmit",
+                            "value_text": "Lost Retrans",
+                            "scale": 1,
+                            "zerofill": true,
+                            "derivative": false,
+                            "queries": [
+                                4
+                            ],
+                            "color": "#584477",
+                            "alias": null
+                        },
+                        {
+                            "mode": "mean",
+                            "value_field": "TCPSlowStartRetrans",
+                            "value_text": "Slow Restart",
+                            "scale": 1,
+                            "zerofill": true,
+                            "derivative": false,
+                            "queries": [
+                                4
+                            ],
+                            "color": "#FCE2DE",
+                            "alias": null
+                        }
+                    ],
+                    "time_field": "@timestamp",
+                    "x-axis": true,
+                    "y-axis": true,
+                    "y_format": "none",
+                    "grid": {
+                        "max": null,
+                        "min": 0
+                    },
+                    "annotate": {
+                        "enable": false,
+                        "query": "*",
+                        "size": 20,
+                        "field": "_type",
+                        "sort": [
+                            "_score",
+                            "desc"
+                        ]
+                    },
+                    "auto_int": true,
+                    "resolution": 100,
+                    "interval": "30s",
+                    "intervals": [
+                        "auto",
+                        "1s",
+                        "1m",
+                        "5m",
+                        "10m",
+                        "30m",
+                        "1h",
+                        "3h",
+                        "12h",
+                        "1d",
+                        "1w",
+                        "1y"
+                    ],
+                    "lines": true,
+                    "fill": 0,
+                    "linewidth": 3,
+                    "points": false,
+                    "pointradius": 5,
+                    "stack": true,
+                    "spyable": true,
+                    "zoomlinks": true,
+                    "options": true,
+                    "legend": true,
+                    "show_query": true,
+                    "interactive": true,
+                    "legend_counts": true,
+                    "timezone": "browser",
+                    "percentage": false,
+                    "tooltip": {
+                        "value_type": "cumulative",
+                        "query_as_alias": true
+                    },
+                    "title": "Tcp Events"
+                }
+            ],
+            "notice": false
+        }
+    ],
+    "services": {
+        "query": {
+            "list": {
+                "4": {
+                    "id": 4,
+                    "color": "#E24D42",
+                    "alias": "",
+                    "pin": false,
+                    "type": "lucene",
+                    "enable": true,
+                    "query": "host:\"atsank1\""
+                }
+            },
+            "ids": [
+                4
+            ]
+        },
+        "filter": {
+            "list": {
+                "0": {
+                    "type": "time",
+                    "field": "@timestamp",
+                    "from": "now-1h",
+                    "to": "now",
+                    "mandate": "must",
+                    "active": true,
+                    "alias": "",
+                    "id": 0
+                }
+            },
+            "ids": [
+                0
+            ]
+        }
+    },
+    "title": "Turksat Cache",
+    "failover": false,
+    "index": {
+        "default": "ADD_A_TIME_FILTER",
+        "pattern": "[logstash-]YYYY.MM.DD",
+        "interval": "day",
+        "warm_fields": true
+    },
+    "style": "dark",
+    "editable": true,
+    "panel_hints": true,
+    "pulldowns": [
+        {
+            "type": "query",
+            "collapse": false,
+            "notice": false,
+            "enable": true,
+            "query": "*",
+            "pinned": true,
+            "history": [
+                "host:\"atsank1\"",
+                "_type:\"ats_stats\"",
+                "@type:\"trafficserver\" AND (squid_content_type:\"video\" OR squid_content_type:\"audio\")",
+                "@message == \"crash\" or @message == \"Crash\" or @message == \"CRASH\"",
+                "@message == \"fail\" or @message == \"Fail\" or @message == \"FAIL\"",
+                "@message == \"warn\" or @message == \"Warn\" or @message == \"WARN\"",
+                "@message == \"error\" or @message == \"Error\" or @message == \"ERROR\"",
+                "@message == \"exception\" or @message == \"Exception\" or @message == \"EXCEPTION\"",
+                "@type:\"trafficserver\" AND @source_path:\"squid.log\"",
+                "host:\"atsproxy.atsproxy\" AND plugin:\"memory\" AND collectd_type:\"memory\" AND type_instance:\"free\""
+            ],
+            "remember": 10
+        },
+        {
+            "type": "filtering",
+            "collapse": true,
+            "notice": false,
+            "enable": true
+        }
+    ],
+    "nav": [
+        {
+            "type": "timepicker",
+            "collapse": false,
+            "notice": false,
+            "enable": true,
+            "status": "Stable",
+            "time_options": [
+                "5m",
+                "15m",
+                "1h",
+                "6h",
+                "12h",
+                "24h",
+                "2d",
+                "7d",
+                "30d"
+            ],
+            "refresh_intervals": [
+                "5s",
+                "10s",
+                "30s",
+                "1m",
+                "5m",
+                "15m",
+                "30m",
+                "1h",
+                "2h",
+                "1d"
+            ],
+            "timefield": "@timestamp",
+            "now": true,
+            "filter_id": 0
+        }
+    ],
+    "loader": {
+        "save_gist": false,
+        "save_elasticsearch": true,
+        "save_local": true,
+        "save_default": true,
+        "save_temp": true,
+        "save_temp_ttl_enable": true,
+        "save_temp_ttl": "30d",
+        "load_gist": false,
+        "load_elasticsearch": true,
+        "load_elasticsearch_size": 20,
+        "load_local": false,
+        "hide": false
+    },
+    "refresh": "30s"
+}

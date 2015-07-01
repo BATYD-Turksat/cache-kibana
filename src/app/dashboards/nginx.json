@@ -37,7 +37,7 @@
             ]
           },
           "resolution": 100,
-          "interval": "10m",
+          "interval": "30s",
           "intervals": [
             "auto",
             "1s",
@@ -111,13 +111,14 @@
     "filter": {
       "list": {
         "0": {
-          "from": "now-1d",
-          "to": "now",
-          "field": "@timestamp",
           "type": "time",
+          "field": "@timestamp",
+          "from": "now-1h",
+          "to": "now",
+          "mandate": "must",
           "active": true,
-          "id": 0,
-          "mandate": "must"
+          "alias": "",
+          "id": 0
         }
       },
       "ids": [
@@ -150,7 +151,7 @@
     {
       "type": "filtering",
       "collapse": false,
-      "notice": false,
+      "notice": true,
       "enable": false
     }
   ],
@@ -185,7 +186,8 @@
         "1d"
       ],
       "timefield": "@timestamp",
-      "now": true
+      "now": true,
+      "filter_id": 0
     }
   ],
   "loader": {
