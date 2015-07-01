@@ -175,7 +175,7 @@
     "pulldowns": [
         {
             "type": "query",
-            "collapse": false,
+            "collapse": true,
             "notice": false,
             "enable": true,
             "query": "*",
