@@ -7,6 +7,11 @@ if [ $(id -u) != "0" ]
         exit $?
 fi
 
+if [ "$#" -ne 1 ]; then
+    echo "USAGE: ./install.sh SECRET"
+    exit 1
+fi
+
 # Installations
 # ===============
 
@@ -24,12 +29,20 @@ if ! [ "$e_found" == "0" ] ; then
     fi
 fi
 
+SECRET=$1
+
+# Introduce new repositories
+apt-add-repository -y ppa:vbernat/haproxy-1.5
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+add-apt-repository -y ppa:rwky/redis
+apt-get -y update
+
 # Helpers
 apt-get -y install python-pip
 pip install docopt
 
 # NodeJs
-apt-get -y update
 apt-get -y install nodejs
 apt-get -y install npm
 npm install gulp -g
@@ -50,8 +63,6 @@ echo $PROJECT_PATH
 # Nginx
 apt-get -y install nginx
 # Haproxy
-apt-add-repository -y ppa:vbernat/haproxy-1.5
-apt-get -y update
 apt-get -y --force-yes install haproxy
 # MongoDB
 # Fix Failed global initialization: BadValue Invalid or no user locale set.
@@ -66,9 +77,6 @@ dpkg-reconfigure locales
 apt-get -y remove mongodb* --purge
 apt-get -y autoremove
 # Install mongo
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
-apt-get -y update
 apt-get -y install mongodb-org
 # Fix mongo version
 echo "mongodb-org hold" | sudo dpkg --set-selections
@@ -91,14 +99,60 @@ mongodb hard nofile 64000 \n \
 mongodb soft nproc  64000 \n \
 mongodb hard nproc  64000 \n"
 
+# Copy config template to project root
+cp -a ../config ../..
+
 # Generate the initial mongo data set
 pushd .
 cd ./mongodb
 . init.sh
 popd
+
+# Update the application config settings
+python ../helpers/auto_replace.py --file=$PROJECT_PATH/config/database.js \
+                                  --search="#AUTO_REPLACE_SERVER_1" \
+                                  --replace="127.0.0.1"
+python ../helpers/auto_replace.py --file=$PROJECT_PATH/config/database.js \
+                                  --search="#AUTO_REPLACE_SERVER_2" \
+                                  --replace="127.0.0.1"
+python ../helpers/auto_replace.py --file=$PROJECT_PATH/config/database.js \
+                                  --search="#AUTO_REPLACE_PORT_1" \
+                                  --replace="27001"
+python ../helpers/auto_replace.py --file=$PROJECT_PATH/config/database.js \
+                                  --search="#AUTO_REPLACE_PORT_2" \
+                                  --replace="27002"
+python ../helpers/auto_replace.py --file=$PROJECT_PATH/config/inet.js \
+                                  --search="#AUTO_REPLACE_SERVER_IP" \
+                                  --replace="127.0.0.1"
+python ../helpers/auto_replace.py --file=$PROJECT_PATH/config/session.js \
+                                  --search="#AUTO_REPLACE_HOST1" \
+                                  --replace="localhost"
+python ../helpers/auto_replace.py --file=$PROJECT_PATH/config/session.js \
+                                  --search="#AUTO_REPLACE_HOST2" \
+                                  --replace="localhost"
+python ../helpers/auto_replace.py --file=$PROJECT_PATH/config/session.js \
+                                  --search="#AUTO_REPLACE_HOST3" \
+                                  --replace="localhost"
+python ../helpers/auto_replace.py --file=$PROJECT_PATH/config/session.js \
+                                  --search="#AUTO_REPLACE_PORT1" \
+                                  --replace="26379"
+python ../helpers/auto_replace.py --file=$PROJECT_PATH/config/session.js \
+                                  --search="#AUTO_REPLACE_PORT2" \
+                                  --replace="26380"
+python ../helpers/auto_replace.py --file=$PROJECT_PATH/config/session.js \
+                                  --search="#AUTO_REPLACE_PORT3" \
+                                  --replace="26381"
+python ../helpers/auto_replace.py --file=$PROJECT_PATH/config/session.js \
+                                  --search="#AUTO_REPLACE_CLUSTER_NAME" \
+                                  --replace="mymaster"
+python ../helpers/auto_replace.py --file=$PROJECT_PATH/config/session.js \
+                                  --search="#AUTO_REPLACE_SESSION_SECRET" \
+                                  --replace=$SECRET
+python ../helpers/auto_replace.py --file=$PROJECT_PATH/config/token.js \
+                                  --search="#AUTO_REPLACE_TOKEN_SECRET" \
+                                  --replace=$SECRET
+
 # Redis
-add-apt-repository -y ppa:rwky/redis
-apt-get -y update
 apt-get -y install redis-server
 
 # Haproxy conf setup
@@ -128,10 +182,13 @@ cp -fv ./redis/*.conf /etc/redis
 chown redis:redis /etc/redis/*.conf
 
 # Copy upstart files
+rm -Rf /etc/init/redis* \
+       /etc/init/nodejs* \
+       /etc/init/mongo* \
+       /etc/init/sentinel* \
+       /etc/init/haproxy* \
+       /etc/init/nginx*
 cp -fv ./upstart/* /etc/init
-python ../helpers/auto_replace.py --file=/etc/init/nodejs-instance.conf \
-                                  --search="#AUTO_REPLACE_COOKIE_SECRET" \
-                                  --replace="42rerwejfkj9434cds5ewejd"
 python ../helpers/auto_replace.py --file=/etc/init/nodejs-instance.conf \
                                   --search="#AUTO_REPLACE_PR_PATH" \
                                   --replace=$PROJECT_PATH
