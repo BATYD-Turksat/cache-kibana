@@ -21,6 +21,8 @@ var Redis        = require('ioredis');
 var swig         = require('swig');
 var configDB     = require('./config/database');
 var configYML    = require('./config/yml');
+var configSession= require('./config/session');
+var configInet   = require('./config/inet');
 var yml          = require('./app/yaml/yml-parser');
 var Token        = require('./app/models/tokenModel');
 
@@ -173,15 +175,20 @@ app.post('/controls/api/:id', function(req, res) {
 
 // required for passport
 // redis options
-var options = {sentinels: [{ host: '127.0.0.1', port: 26379 }, { host: '127.0.0.1', port: 26380 },  { host: '127.0.0.1', port: 26381 }],
-    name: 'mymaster'};
+var options = {sentinels: [{ host: configSession.sentinel.host1,
+                             port: configSession.sentinel.port1 },
+                           { host: configSession.sentinel.host2,
+                             port: configSession.sentinel.port2 },
+                           { host: configSession.sentinel.host3,
+                             port: configSession.sentinel.port3 }],
+    name: configSession.cluster.name};
 
 // required for passport sessions
 app.use(session({
     store: new RedisStore({ client: new Redis(options) }),
-    secret: process.env.CACHE_COOKIE
+    secret: configSession.secret
 }));
-console.log("Cookie secret: " + process.env.CACHE_COOKIE);
+
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
@@ -291,5 +298,5 @@ app.get("/__es", function(req, res){
  });
 
 // launch ======================================================================
-app.listen(port);
-console.log('The magic happens on port ' + port);
+app.listen(port, configInet.addr);
+console.log('The magic happens on port ' + port + ' at ' + configInet.addr);
