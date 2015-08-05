@@ -29,6 +29,21 @@ echo $PROJECT_PATH
 # Install common files.
 . install_common.sh
 
+# Discover Elasticsearch IP
+# TODO: Elacticsearch is now single point of failure. Need a HA solution.
+apt-get install -y curl
+ELASTIC_IP='localhost'
+e_found=$(curl -XGET 'http://'$ELASTIC_IP':9200' | grep -q "tagline" && echo $?)
+if ! [ "$e_found" == "0" ] ; then
+    ELASTIC_IP=$(ifconfig eth0 | grep inet | awk '{print $2}' | cut -d':' -f2)
+    e_found=$(curl -XGET 'http://'$ELASTIC_IP':9200' | grep -q "tagline" && echo $?)
+
+    if ! [ "$e_found" == "0" ] ; then
+        echo "Coundn't find a running elastic search instance. Run elasticsearch and retry"
+        exit 1
+    fi
+fi
+
 # Copy upstart files
 rm -Rf /etc/init/redis* \
        /etc/init/nodejs* \
@@ -143,6 +158,9 @@ ln -sfv /etc/nginx/sites-available/nginx-node1 /etc/nginx/sites-enabled/nginx-no
 python ../helpers/auto_replace.py --file=/etc/nginx/sites-available/nginx-node1 \
                                   --search="#AUTO_REPLACE_PR_PATH" \
                                   --replace=$PROJECT_PATH
+python ../helpers/auto_replace.py --file=/etc/init/nodejs-instance.conf \
+                                  --search="#AUTO_REPLACE_ES_URL" \
+                                  --replace=$ELASTIC_IP
 
 mv -fv /etc/init.d/nginx ~ #  Nginx is controlled by upstart
 
