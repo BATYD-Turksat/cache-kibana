@@ -297,6 +297,27 @@ app.get("/__es", function(req, res){
  res.type('txt').send('Not found');
  });
 
+// Catch uncaught exceptions
+process.on('uncaughtException', function(err) {
+  console.log('Caught exception: ' + err);
+  
+  if ( err.toString().trim() == "Error: No valid replicaset instance servers found" ){
+      console.log("Execute mongo cluster init")
+      var child = exec('mongodb-configure.sh',
+                       function (error, stdout, stderr) {
+                           if (error !== null) {
+                                console.log('exec error: ' + error);
+                            }
+                           if (stdout !== null) {
+                                console.log('exec stdout: ' + stdout);
+                           }
+                           if (stderr !== null) {
+                                console.log('exec stderr: ' + stderr);
+                           }
+                        });
+  }
+});
+
 // launch ======================================================================
 app.listen(port, configInet.addr);
 console.log('The magic happens on port ' + port + ' at ' + configInet.addr);
